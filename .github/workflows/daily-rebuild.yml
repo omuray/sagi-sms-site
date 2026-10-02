@@ -1,0 +1,11 @@
+# 毎朝7時(日本時間)にCloudflare Pagesを再ビルドして、シートの最新内容を反映する
+name: daily-rebuild
+on:
+  schedule:
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -fsS -X POST "${{ secrets.CF_DEPLOY_HOOK }}"

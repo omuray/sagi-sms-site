@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+interface Props { title: string; description?: string }
+const { title, description = '実際に届いた詐欺SMS・フィッシングメールの事例と対策をまとめています。' } = Astro.props;
+const siteName = '[サイト名]';
+---
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title} | {siteName}</title>
+  <meta name="description" content={description} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
+        {siteName}
+      </a>
+      <nav class="site-nav">
+        <a href="/cases/">詐欺事例</a>
+        <a href="/guide/">対策ガイド</a>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap"><slot /></div>
+  <footer class="site-footer">
+    <div class="inner">
+      <div>当サイトは広告(アフィリエイト)を含みます。</div>
+      <div><a href="/about/">運営者情報</a><a href="/privacy/">プライバシーポリシー</a><a href="/disclaimer/">免責事項</a></div>
+    </div>
+  </footer>
+</body>
+</html>

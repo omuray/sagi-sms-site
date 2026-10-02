@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import { getGroups, formatDate } from '../../lib/sheet';
+const groups = await getGroups();
+const bySpoof = new Map<string, typeof groups>();
+for (const g of groups) bySpoof.set(g.spoof, [...(bySpoof.get(g.spoof) ?? []), g]);
+---
+<Base title="詐欺事例一覧">
+  <div class="crumb"><a href="/">ホーム</a> › 詐欺事例</div>
+  <div class="layout">
+    <div class="article">
+      <h1>詐欺事例一覧</h1>
+      {[...bySpoof].map(([spoof, list]) => (
+        <section>
+          <h2 id={spoof}>{spoof}</h2>
+          <ul class="list">
+            {list.map((g) => <li><a href={`/cases/${g.slug}/`}><span class="t">{g.method}</span><br /><span class="note">最新の受信:{formatDate(g.latest)}/{g.total}件</span></a></li>)}
+          </ul>
+        </section>
+      ))}
+    </div>
+    <Sidebar />
+  </div>
+</Base>

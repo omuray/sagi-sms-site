@@ -1,0 +1,80 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import { getGroups, formatDate, type CaseGroup } from '../../lib/sheet';
+
+export async function getStaticPaths() {
+  const groups = await getGroups();
+  return groups.map((g) => ({ params: { slug: g.slug }, props: { group: g } }));
+}
+
+const { group } = Astro.props as { group: CaseGroup };
+const guide = (await getEntry('guides', group.slug)) ?? (await getEntry('guides', 'default'));
+const { Content } = await render(guide!);
+const title = `${group.spoof}を装った「${group.method}」${group.media}に注意`;
+const related = (await getGroups()).filter((g) => g.slug !== group.slug).slice(0, 3);
+---
+<Base title={title} description={guide!.data.summary}>
+  <div class="crumb"><a href="/">ホーム</a> › <a href="/cases/">詐欺事例</a> › {group.spoof}</div>
+  <div class="layout">
+    <article class="article">
+      <div class="tags">
+        <span class="tag solid">{group.media}</span>
+        <span class="tag">{group.spoof}</span>
+        <span class="tag">{group.method}</span>
+      </div>
+      <h1>{title}</h1>
+      <div class="meta">
+        <span>最新の受信:{formatDate(group.latest)}</span>
+        <span>確認した件数:{group.total}件</span>
+        <span>文面の種類:{group.cases.length}種類</span>
+      </div>
+      <p class="verdict"><strong>結論:</strong>{guide!.data.summary}</p>
+
+      <h2>実際に届いたメッセージ</h2>
+      <div class="sms-box">
+        {group.cases.map((c) => (
+          <div class="sms">
+            <div class="info">{formatDate(c.date)} 受信{c.count > 1 && `(同じ文面を${c.count}回受信)`}</div>
+            <div class="bubble">{c.body}</div>
+          </div>
+        ))}
+        <div class="note">※URLは誤ってアクセスしないよう無害化して掲載しています。送信元の番号は偽装や乗っ取りの可能性があるため掲載していません。</div>
+      </div>
+
+      <div class="guide"><Content /></div>
+
+      {group.official && (
+        <>
+          <h2>公式の注意喚起</h2>
+          <a class="official" href={group.official} target="_blank" rel="noopener">
+            <span><strong>{group.spoof}の公式案内</strong><br /><span class="note">公式サイトで最新の情報を確認できます</span></span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg>
+          </a>
+        </>
+      )}
+
+      <h2>今日からできる対策</h2>
+      <div class="panel">
+        <strong>まずは無料で:携帯キャリアの迷惑SMSフィルタをオンにする</strong>
+        <p style="margin:6px 0 0;color:var(--body)">各キャリアの無料の拒否設定で、詐欺SMSの多くを受信前に止められます。</p>
+      </div>
+      <div class="panel pr" style="margin-top:16px">
+        <p style="margin:0 0 12px"><span class="pr-label">PR</span><strong>さらに強化したい方へ</strong></p>
+        <p style="margin:0 0 12px">[セキュリティアプリ名]:[紹介文]</p>
+        <a class="btn" href="#" rel="sponsored noopener">詳細を見る</a>
+      </div>
+
+      {related.length > 0 && (
+        <>
+          <h2>ほかの事例</h2>
+          <ul class="list">
+            {related.map((g) => <li><a href={`/cases/${g.slug}/`}><span class="t">{g.spoof}を装った「{g.method}」</span><br /><span class="note">最新の受信:{formatDate(g.latest)}</span></a></li>)}
+          </ul>
+        </>
+      )}
+    </article>
+    <Sidebar />
+  </div>
+</Base>

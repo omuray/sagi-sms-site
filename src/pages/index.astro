@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { getGroups, formatDate } from '../lib/sheet';
+const latest = (await getGroups()).slice(0, 10);
+---
+<Base title="実際に届いた詐欺SMSの事例と対策">
+  <div class="layout">
+    <div class="article">
+      <h1>実際に届いた詐欺SMSの事例と対策</h1>
+      <p>運営者の手元に毎日届く詐欺SMSを記録し、見分け方と対処法をまとめています。</p>
+      <h2>最近の事例</h2>
+      <ul class="list">
+        {latest.map((g) => <li><a href={`/cases/${g.slug}/`}><span class="t">{g.spoof}を装った「{g.method}」</span><br /><span class="note">最新の受信:{formatDate(g.latest)}/{g.total}件</span></a></li>)}
+      </ul>
+      <p><a href="/cases/">すべての事例を見る</a></p>
+    </div>
+    <Sidebar />
+  </div>
+</Base>
