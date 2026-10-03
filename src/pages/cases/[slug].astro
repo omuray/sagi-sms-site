@@ -14,6 +14,8 @@ const guide = (await getEntry('guides', group.slug)) ?? (await getEntry('guides'
 const { Content } = await render(guide!);
 const title = `${group.spoof}を装った「${group.method}」${group.media}に注意`;
 const related = (await getGroups()).filter((g) => g.slug !== group.slug).slice(0, 3);
+// PR枠:アフィリエイトのURLを貼ると表示される(空のあいだはPR枠ごと出さない)
+const prUrl = '';
 ---
 <Base title={title} description={guide!.data.summary}>
   <div class="crumb"><a href="/">ホーム</a> › <a href="/cases/">詐欺事例</a> › {group.spoof}</div>
@@ -60,11 +62,13 @@ const related = (await getGroups()).filter((g) => g.slug !== group.slug).slice(0
         <strong>まずは無料で:携帯キャリアの迷惑SMSフィルタをオンにする</strong>
         <p style="margin:6px 0 0;color:var(--body)">各キャリアの無料の拒否設定で、詐欺SMSの多くを受信前に止められます。</p>
       </div>
-      <div class="panel pr" style="margin-top:16px">
-        <p style="margin:0 0 12px"><span class="pr-label">PR</span><strong>さらに強化したい方へ</strong></p>
-        <p style="margin:0 0 12px">[セキュリティアプリ名]:[紹介文]</p>
-        <a class="btn" href="#" rel="sponsored noopener">詳細を見る</a>
-      </div>
+      {prUrl && (
+        <div class="panel pr" style="margin-top:16px">
+          <p style="margin:0 0 12px"><span class="pr-label">PR</span><strong>さらに強化したい方へ</strong></p>
+          <p style="margin:0 0 12px"><strong>ウイルスバスター モバイル</strong>:詐欺SMSやフィッシングメールに含まれる危険なURLを判定し、偽サイトを開く前に警告します。キャリアのフィルタをすり抜けたメッセージへの備えに。</p>
+          <a class="btn" href={prUrl} target="_blank" rel="sponsored noopener">無料体験版を見る</a>
+        </div>
+      )}
 
       {related.length > 0 && (
         <>
