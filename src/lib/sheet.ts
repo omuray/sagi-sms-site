@@ -44,7 +44,8 @@ export function defang(text: string): string {
 }
 
 // 電話番号(区切りあり・なし、国際表記を含む)
-const PHONE = /(?:\+\d{1,3}[\s\-‑]?)?\(?0?\d{1,4}\)?[\s\-‑]\d{2,4}[\s\-‑]\d{3,4}(?!\d)|(?<!\d)0\d{9,10}(?!\d)/g;
+// 3つ目は区切りなしの日本の国際表記(例:818054699501、+818054699501)
+const PHONE = /(?:\+\d{1,3}[\s\-‑]?)?\(?0?\d{1,4}\)?[\s\-‑]\d{2,4}[\s\-‑]\d{3,4}(?!\d)|(?<!\d)0\d{9,10}(?!\d)|(?<![\d+])\+?81\d{9,10}(?!\d)/g;
 
 // 末尾から数えて4桁の数字を●にする(区切り記号はそのまま)
 export function maskPhone(num: string): string {
@@ -73,6 +74,8 @@ export function sanitize(text: string): string {
     .replace(/(^|[^\/\w.-])[\w.+-]+@[\w-]+(\.[\w-]+)+/g, '$1[メールアドレス]')
     // 見えない文字で分割されていたアドレスの前半も消す
     .replace(/[\w.+-]+ +\[メールアドレス\]/g, '[メールアドレス]')
+    // 全角の数字・記号を半角にそろえる(全角で書かれた電話番号も伏せるため)
+    .replace(/[０-９＋－]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
     // 電話番号は下4桁だけ伏せる(例:0120-123-●●●●)
     .replace(PHONE, maskPhone)
     .replace(/[ \t\u3000]{2,}/g, ' ')
