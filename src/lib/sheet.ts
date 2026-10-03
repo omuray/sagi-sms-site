@@ -47,17 +47,6 @@ export function defang(text: string): string {
 // 3つ目は区切りなしの日本の国際表記(例:818054699501、+818054699501)
 const PHONE = /(?:\+\d{1,3}[\s\-‑]?)?\(?0?\d{1,4}\)?[\s\-‑]\d{2,4}[\s\-‑]\d{3,4}(?!\d)|(?<!\d)0\d{9,10}(?!\d)|(?<![\d+])\+?81\d{9,10}(?!\d)/g;
 
-// 末尾から数えて4桁の数字を●にする(区切り記号はそのまま)
-export function maskPhone(num: string): string {
-  let left = 4;
-  return num
-    .split('')
-    .reverse()
-    .map((ch) => (/\d/.test(ch) && left-- > 0 ? '●' : ch))
-    .reverse()
-    .join('');
-}
-
 // 公開用に本文を整える(URLの無害化より先に実行する)
 export function sanitize(text: string): string {
   return text
@@ -76,8 +65,9 @@ export function sanitize(text: string): string {
     .replace(/[\w.+-]+ +\[メールアドレス\]/g, '[メールアドレス]')
     // 全角の数字・記号を半角にそろえる(全角で書かれた電話番号も伏せるため)
     .replace(/[０-９＋－]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
-    // 電話番号は下4桁だけ伏せる(例:0120-123-●●●●)
-    .replace(PHONE, maskPhone)
+    // 電話番号は丸ごと伏せる(括弧で囲まれていればそのまま「電話番号」、例:{818054699501} → {電話番号})
+    .replace(PHONE, '[電話番号]')
+    .replace(/([{(\[（【「])\[電話番号\]([})\]）】」])/g, '$1電話番号$2')
     .replace(/[ \t\u3000]{2,}/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
