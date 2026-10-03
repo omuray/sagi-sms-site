@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { getGroups, formatDate } from '../lib/sheet';
+const latest = (await getGroups()).slice(0, 5);
+---
+<Base title="ページが見つかりません">
+  <div class="layout">
+    <div class="article">
+      <h1>ページが見つかりません</h1>
+      <p>お探しのページは、削除されたかURLが変わった可能性があります。事例は、なりすまし先や手口の整理にあわせてページをまとめ直すことがあります。</p>
+      <p><a href="/cases/">詐欺事例の一覧から探す</a></p>
+      <h2>最近の事例</h2>
+      <ul class="list">
+        {latest.map((g) => <li><a href={`/cases/${g.slug}/`}><span class="t">{g.spoof}を装った「{g.method}」</span><br /><span class="note">最新の受信:{formatDate(g.latest)}</span></a></li>)}
+      </ul>
+      <p><a href="/">ホームに戻る</a></p>
+    </div>
+    <Sidebar />
+  </div>
+</Base>
