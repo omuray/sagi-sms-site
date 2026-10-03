@@ -1,9 +1,84 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import { getGroups } from '../../lib/sheet';
+
+// 手口ごとに、件数の多いなりすまし先の事例ページへリンクする
+const groups = await getGroups();
+const byMethod = new Map<string, typeof groups>();
+for (const g of groups) byMethod.set(g.method, [...(byMethod.get(g.method) ?? []), g]);
+const methods = [...byMethod]
+  .map(([method, list]) => ({ method, list: [...list].sort((a, b) => b.total - a.total), total: list.reduce((s, g) => s + g.total, 0) }))
+  .sort((a, b) => b.total - a.total);
 ---
-<Base title="対策ガイド">
-  <div class="article">
-    <h1>対策ガイド</h1>
-    <p>[ここに内容を書く]</p>
+<Base title="詐欺SMS・フィッシングメールの対策ガイド" description="詐欺SMS・フィッシングメールの見分け方、届いたときの対応、URLを開いてしまったときの対処法、事前にできる対策をまとめています。">
+  <div class="crumb"><a href="/">ホーム</a> › 対策ガイド</div>
+  <div class="layout">
+    <article class="article">
+      <h1>詐欺SMS・フィッシングメールの対策ガイド</h1>
+      <p class="verdict"><strong>基本:</strong>メッセージ内のURLは開かない。確認したいときは、公式アプリかブックマークした公式サイトから。</p>
+
+      <div class="guide">
+        <h2>詐欺と見分けるポイント</h2>
+        <ul>
+          <li><strong>URLが公式と違う</strong>:企業名に似せた、無関係なアドレスです。短縮URLや、見慣れない末尾(.top、.cn など)も要注意です。</li>
+          <li><strong>急がせる・不安にさせる</strong>:「本日中に」「アカウントを停止します」「不正利用を検知しました」など、考える時間を与えない文面です。</li>
+          <li><strong>宛名や具体的な情報がない</strong>:「お客様」「ご利用者様」など、誰にでも送れる書き方です。</li>
+          <li><strong>入力を求める</strong>:ID・パスワード、カード番号、暗証番号、認証コードの入力を求めます。正規の企業がメッセージのリンクから入力を求めることは、まずありません。</li>
+          <li><strong>日本語が不自然</strong>:漢字や敬語の誤り、見慣れない記号、余計な空白が混ざっています。ただし、自然な日本語の詐欺も増えています。</li>
+          <li><strong>心当たりがない</strong>:頼んでいない荷物、使っていないサービス、応募していない当選の連絡です。</li>
+        </ul>
+
+        <h2>届いたときにすること</h2>
+        <ul>
+          <li><strong>URLは開かない、返信しない</strong>:返信や電話をすると、「反応がある番号・アドレス」として狙われやすくなります。</li>
+          <li><strong>公式の方法で確かめる</strong>:気になるときは、公式アプリやブックマークから自分でログインして、お知らせを確認します。</li>
+          <li><strong>同じ文面を探す</strong>:<a href="/cases/">詐欺事例の一覧</a>で、同じような文面が届いていないか確かめられます。</li>
+          <li><strong>削除する</strong>:確認できたら、メッセージは削除してかまいません。</li>
+        </ul>
+
+        <h2>URLを開いてしまったら</h2>
+        <ul>
+          <li><strong>開いただけで、何も入力していない</strong>:ページを閉じてメッセージを削除すれば、問題ないことがほとんどです。</li>
+          <li><strong>ID・パスワードを入力した</strong>:すぐにパスワードを変更します。同じパスワードを使い回しているサービスも変更し、ログイン履歴に覚えのないものがないか確認します。</li>
+          <li><strong>カード番号を入力した</strong>:カード裏面の番号からカード会社に連絡し、カードを止めてもらいます。</li>
+          <li><strong>認証コード(SMSで届く数字)を入力した</strong>:乗っ取りにつながります。すぐにそのサービスの公式窓口に連絡します。</li>
+          <li><strong>アプリを入れた・プロファイルを入れた</strong>:機内モードにしてアプリ(プロファイル)を削除し、携帯キャリアの窓口に相談します。</li>
+          <li><strong>お金を払った・ギフトカードを買った</strong>:すぐに警察(#9110)に相談します。</li>
+        </ul>
+
+        <h2>今日からできる対策</h2>
+        <ul>
+          <li><strong>迷惑SMS・迷惑メールのフィルタをオンにする</strong>:携帯キャリアやメールサービスの無料の設定で、多くを受信前に止められます。</li>
+          <li><strong>公式アプリとブックマークを使う</strong>:よく使う銀行・カード・通販は、メッセージのリンクではなく公式アプリかブックマークから開く習慣にします。</li>
+          <li><strong>パスワードを使い回さない</strong>:1か所で漏れても、ほかのサービスまで乗っ取られるのを防げます。</li>
+          <li><strong>二段階認証・パスキーを設定する</strong>:パスワードが漏れても、ログインされにくくなります。</li>
+          <li><strong>家族にも伝える</strong>:同じメッセージは家族にも届いています。特に高齢の家族には、「メッセージのURLは開かない」とひとこと伝えておくと効果的です。</li>
+        </ul>
+
+        <h2>相談・報告の窓口</h2>
+        <ul>
+          <li><strong>警察相談専用電話</strong>:#9110(被害にあった、またはその恐れがあるとき)</li>
+          <li><strong>消費者ホットライン</strong>:188(契約や支払いのトラブル)</li>
+          <li><strong>フィッシング対策協議会</strong>:フィッシングメール・サイトの報告を受け付けています</li>
+          <li><strong>迷惑メール相談センター</strong>:迷惑メール・迷惑SMSの情報提供を受け付けています</li>
+        </ul>
+      </div>
+
+      {methods.length > 0 && (
+        <>
+          <h2>手口別の事例</h2>
+          <ul class="list">
+            {methods.map((m) => (
+              <li>
+                <span class="t">{m.method}</span>({m.total}件)<br />
+                <span class="note">{m.list.slice(0, 4).map((g, i) => <>{i > 0 && '/'}<a href={`/cases/${g.slug}/`}>{g.spoof}</a></>)}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </article>
+    <Sidebar />
   </div>
 </Base>
