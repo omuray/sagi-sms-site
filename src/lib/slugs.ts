@@ -6,6 +6,7 @@ export const SPOOF_SLUGS: Record<string, string> = {
   'Apple': 'apple',
   'Nintendo': 'nintendo',
   '楽天': 'rakuten',
+  'WhatsApp': 'whatsapp',
   // クレジットカード
   'Visa': 'visa',
   'Mastercard': 'mastercard',
