@@ -45,10 +45,12 @@ export function defang(text: string): string {
 }
 
 // URLに含まれる受信者固有の値(ログインID・パスワード・メールアドレスを符号化した文字列など)を伏せる
+// 12桁以上の数字(送信ごとに変わる追跡番号の可能性がある)は先頭4桁だけ残す(例:2026**********)
 export function maskUrlParams(text: string): string {
   return text
     .replace(/([?&;](?:id|uid|mid|user|userid|login|pass|pw|passwd|password|email|mail|token|key|code|dst)=)[^\s&#]+/gi, '$1***')
-    .replace(/\?[A-Za-z0-9+\/_%-]{20,}={0,2}/g, '?***');
+    .replace(/\?[A-Za-z0-9+\/_%-]{20,}={0,2}/g, '?***')
+    .replace(/(?<!\d)(\d{4})(\d{8,})(?!\d)/g, (_, head, rest) => head + '*'.repeat(rest.length));
 }
 
 // 電話番号(区切りあり・なし、国際表記を含む)
