@@ -1,7 +1,8 @@
 ---
 import '../styles/global.css';
-interface Props { title: string; description?: string }
-const { title, description = '実際に届いた詐欺SMS・フィッシングメールの事例と対策をまとめています。' } = Astro.props;
+// jsonLd: ページごとの構造化データ(schema.org)。配列で複数渡せる
+interface Props { title: string; description?: string; ogType?: 'website' | 'article'; jsonLd?: object[] }
+const { title, description = '実際に届いた詐欺SMS・フィッシングメールの事例と対策をまとめています。', ogType = 'website', jsonLd = [] } = Astro.props;
 const siteName = '詐欺SMS実録ノート';
 // 404 はどのURLでも表示されるので canonical を付けない
 const canonical = Astro.url.pathname.startsWith('/404') ? null : new URL(Astro.url.pathname, Astro.site);
@@ -14,6 +15,14 @@ const canonical = Astro.url.pathname.startsWith('/404') ? null : new URL(Astro.u
   <title>{title} | {siteName}</title>
   <meta name="description" content={description} />
   {canonical && <link rel="canonical" href={canonical} />}
+  <meta property="og:site_name" content={siteName} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:locale" content="ja_JP" />
+  {canonical && <meta property="og:url" content={canonical} />}
+  <meta name="twitter:card" content="summary" />
+  {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d).replace(/</g, '\\u003c')} />)}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet" />
 </head>
