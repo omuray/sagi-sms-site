@@ -24,6 +24,7 @@ const canonical = Astro.url.pathname.startsWith('/404') ? null : new URL(Astro.u
   <meta name="twitter:card" content="summary" />
   {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d).replace(/</g, '\\u003c')} />)}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet" />
 </head>
 <body>

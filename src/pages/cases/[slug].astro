@@ -18,6 +18,12 @@ const method = group.method === 'その他' ? '' : `「${METHOD_SHORT[group.meth
 const title = group.media === '電話'
   ? `${group.spoof}${method}詐欺電話の内容と見分け方`
   : `${group.spoof}${method}詐欺${group.media}の文面と見分け方`;
+// 本文冒頭の導入文:最新の文面の書き出しを引用して、届いたものと同じか確かめやすくする
+const opening = [...group.cases[0].body.replace(/\s+/g, ' ').trim()];
+const quote = opening.length > 30 ? `${opening.slice(0, 30).join('')}…` : opening.join('');
+const mediaLabel = group.media === 'SNS' ? 'SNSのメッセージ' : group.media;
+// 「不明(有料サイト)」「その他」は「〇〇を装った」と書くと不自然なので省く
+const spoofPhrase = group.spoof.startsWith('不明') || group.spoof === 'その他' ? '' : `${group.spoof}を装った`;
 const description = `${group.spoof}を装った「${group.method}」の詐欺${group.media}を${group.total}件確認(最新の受信:${formatDate(group.latest)})。実際に届いた文面${group.cases.length}種類と見分け方、URLを開いてしまったときの対処法をまとめています。`;
 // ほかの事例:同じなりすまし先 → 同じ手口 → 新しい順で、5件まで
 const others = (await getGroups()).filter((g) => g.slug !== group.slug);
@@ -70,6 +76,7 @@ const prUrl = '';
         <span>確認した件数:{group.total}件</span>
         <span>文面の種類:{group.cases.length}種類</span>
       </div>
+      <p>「{quote}」という{mediaLabel}が届いたら、{spoofPhrase}詐欺です。同じ手口の文面をこれまでに{group.total}件確認しています。</p>
       <p class="verdict"><strong>結論:</strong>{guide!.data.summary}</p>
 
       <h2>実際に届いたメッセージ</h2>

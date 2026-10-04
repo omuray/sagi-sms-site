@@ -1,19 +1,22 @@
 ---
 import { getGroups } from '../lib/sheet';
 const groups = await getGroups();
-const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-const ranking = groups
-  .map((g) => ({ g, n: g.cases.filter((c) => c.date.getTime() >= weekAgo).reduce((s, c) => s + c.count, 0) }))
-  .filter((r) => r.n > 0)
+// 直近30日の件数で並べる。30日以内の事例がなければ、これまでの件数で並べる
+const since = Date.now() - 30 * 24 * 60 * 60 * 1000;
+const recent = groups
+  .map((g) => ({ g, n: g.cases.filter((c) => c.date.getTime() >= since).reduce((s, c) => s + c.count, 0) }))
+  .filter((r) => r.n > 0);
+const isRecent = recent.length > 0;
+const ranking = (isRecent ? recent : groups.map((g) => ({ g, n: g.total })))
   .sort((a, b) => b.n - a.n)
   .slice(0, 5);
 const spoofs = [...new Set(groups.map((g) => g.spoof))];
 ---
 <aside class="side">
   <section class="panel">
-    <h2>今週多い手口</h2>
+    <h2>{isRecent ? '最近30日に多い手口' : '件数の多い手口'}</h2>
     {ranking.length === 0
-      ? <p class="note">この1週間の事例はまだありません。</p>
+      ? <p class="note">事例はまだありません。</p>
       : <ol>{ranking.map((r) => <li><a href={`/cases/${r.g.slug}/`}>{r.g.spoof}の{r.g.method}</a>({r.n}件)</li>)}</ol>}
   </section>
   <section class="panel">
