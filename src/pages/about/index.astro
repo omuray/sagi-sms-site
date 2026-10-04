@@ -1,9 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { breadcrumb } from '../../lib/jsonld';
 // 問い合わせ用のGoogleフォームを作ったら、URLをここに貼る(空のあいだは「準備中」と表示)
 const contactFormUrl = 'https://forms.gle/jvYfdHY8RnBeJaMP8';
 ---
-<Base title="運営者情報" description="詐欺SMS実録ノートの運営者、サイトの目的、掲載方針、お問い合わせ先です。">
+<Base title="運営者情報" description="詐欺SMS実録ノートの運営者とサイトの目的、掲載の方針(URLの無害化、電話番号・メールアドレスを伏せる、正規の通知は載せない)、広告について、掲載内容の誤りや削除依頼のお問い合わせ先です。" jsonLd={[breadcrumb(Astro.site!, [['ホーム', '/'], ['運営者情報', '/about/']])]}>
   <div class="crumb"><a href="/">ホーム</a> › 運営者情報</div>
   <div class="article">
     <h1>運営者情報</h1>

@@ -14,7 +14,7 @@ const canonical = Astro.url.pathname.startsWith('/404') ? null : new URL(Astro.u
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title} | {siteName}</title>
   <meta name="description" content={description} />
-  {canonical && <link rel="canonical" href={canonical} />}
+  {canonical ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
   <meta property="og:site_name" content={siteName} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />

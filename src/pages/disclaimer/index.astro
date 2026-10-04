@@ -1,9 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { breadcrumb } from '../../lib/jsonld';
 // 内容を変えたら日付も更新する
 const enacted = '2026年10月3日';
 ---
-<Base title="免責事項" description="詐欺SMS実録ノートの掲載内容と、その利用についての免責事項です。">
+<Base title="免責事項" description="詐欺SMS実録ノートの掲載内容の正確性、なりすまし先として掲載している企業・団体、無害化したURL、外部リンクと広告、著作権についての免責事項と、被害にあったときの相談先です。" jsonLd={[breadcrumb(Astro.site!, [['ホーム', '/'], ['免責事項', '/disclaimer/']])]}>
   <div class="crumb"><a href="/">ホーム</a> › 免責事項</div>
   <div class="article">
     <h1>免責事項</h1>

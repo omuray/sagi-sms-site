@@ -2,11 +2,12 @@
 import Base from '../layouts/Base.astro';
 import Sidebar from '../components/Sidebar.astro';
 import { getGroups, formatDate } from '../lib/sheet';
+import { website } from '../lib/jsonld';
 const groups = await getGroups();
 const latest = groups.slice(0, 10);
 const description = `実際に届いた詐欺SMS・フィッシングメール${groups.length}種類の文面を、なりすまし先と手口ごとに掲載。「このメッセージは本物?」と迷ったときに同じ文面を探せ、見分け方と対処法も確認できます。`;
 ---
-<Base title="実際に届いた詐欺SMS・フィッシングメールの事例と対策" description={description}>
+<Base title="実際に届いた詐欺SMS・フィッシングメールの事例と対策" description={description} jsonLd={[website(Astro.site!, description)]}>
   <div class="layout">
     <div class="article">
       <h1>実際に届いた詐欺SMS・フィッシングメールの事例と対策</h1>

@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import { getGroups, formatDate } from '../../lib/sheet';
+import { breadcrumb } from '../../lib/jsonld';
 const groups = await getGroups();
 const bySpoof = new Map<string, typeof groups>();
 for (const g of groups) bySpoof.set(g.spoof, [...(bySpoof.get(g.spoof) ?? []), g]);
@@ -12,7 +13,7 @@ const top = [...bySpoof]
   .map((s) => s.spoof);
 const description = `${top.join('・')}など${bySpoof.size}のなりすまし先をかたる詐欺SMS・フィッシングメール${groups.length}種類を、なりすまし先ごとに一覧で確認できます。`;
 ---
-<Base title="詐欺事例一覧" description={description}>
+<Base title="詐欺事例一覧" description={description} jsonLd={[breadcrumb(Astro.site!, [['ホーム', '/'], ['詐欺事例', '/cases/']])]}>
   <div class="crumb"><a href="/">ホーム</a> › 詐欺事例</div>
   <div class="layout">
     <div class="article">

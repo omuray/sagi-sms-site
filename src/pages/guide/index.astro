@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import { getGroups } from '../../lib/sheet';
+import { breadcrumb } from '../../lib/jsonld';
 
 // 手口ごとに、件数の多いなりすまし先の事例ページへリンクする
 const groups = await getGroups();
@@ -11,7 +12,7 @@ const methods = [...byMethod]
   .map(([method, list]) => ({ method, list: [...list].sort((a, b) => b.total - a.total), total: list.reduce((s, g) => s + g.total, 0) }))
   .sort((a, b) => b.total - a.total);
 ---
-<Base title="詐欺SMS・フィッシングメールの対策ガイド" description="詐欺SMS・フィッシングメールの見分け方、届いたときの対応、URLを開いてしまったときの対処法、事前にできる対策をまとめています。">
+<Base title="詐欺SMS・フィッシングメールの対策ガイド" description="不在通知・アカウント停止・不正利用の検知など、詐欺SMS・フィッシングメールの見分け方と、URLを開いてしまったときの対処法、警察(#9110)や消費者ホットライン(188)などの相談窓口をまとめています。" jsonLd={[breadcrumb(Astro.site!, [['ホーム', '/'], ['対策ガイド', '/guide/']])]}>
   <div class="crumb"><a href="/">ホーム</a> › 対策ガイド</div>
   <div class="layout">
     <article class="article">
