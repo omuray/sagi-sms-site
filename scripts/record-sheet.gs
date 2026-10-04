@@ -6,9 +6,10 @@
 //   1. 「プロジェクトの設定」→「スクリプト プロパティ」に ANTHROPIC_API_KEY を追加
 //   2. 関数 setupTrigger を選んで実行し、権限を許可する
 //   3. メニュー「自動入力」→「新規分を追記」で、セットアップ前に届いていた新規分を追記する
+// フォーム以外(手入力・貼り付け)で フォームの回答 1_ に足した行は、メニュー「新規分を追記」で取り込む
 const SOURCE_SHEET = 'フォームの回答 1_'; // フォームの回答が届くシート
 const SHEET_NAME = 'フォームの回答 1'; // 記録用シート(D〜K列を入力する)
-const INITIAL_LAST_SOURCE_ROW = 207; // 記録用シートに転記済みの、フォームの回答 1_ の最終行
+const INITIAL_LAST_SOURCE_ROW = 207; // この行までは自動入力の導入前に転記済み(以降の行だけを対象にする)
 const CHOICES_SHEET = '選択肢';
 const MODEL = 'claude-opus-5-5';
 const EXAMPLE_COUNT = 25; // 判定の参考にする既存の記録の数
@@ -37,33 +38,37 @@ function onFormSubmitHandler(e) {
   syncNewRows();
 }
 
-// フォームの回答 1_ のうち未転記の行を、記録用シートの末尾に追記して D〜K列を入力する
+// フォームの回答 1_ の INITIAL_LAST_SOURCE_ROW より下の行のうち、記録用シートにまだない行
+// (タイムスタンプ+本文で判定)を末尾に追記して D〜K列を入力する
 function syncNewRows() {
   const ss = SpreadsheetApp.getActive();
   const source = ss.getSheetByName(SOURCE_SHEET);
   const sheet = ss.getSheetByName(SHEET_NAME);
-  const props = PropertiesService.getScriptProperties();
   let added = 0;
 
   withLock(() => {
-    let last = Number(props.getProperty('LAST_SOURCE_ROW')) || INITIAL_LAST_SOURCE_ROW;
-    const end = Math.min(source.getLastRow(), last + MENU_BATCH);
-    if (end <= last) return;
+    if (source.getLastRow() <= INITIAL_LAST_SOURCE_ROW) return;
+    const rows = source.getRange(INITIAL_LAST_SOURCE_ROW + 1, 1, source.getLastRow() - INITIAL_LAST_SOURCE_ROW, C.sender).getValues();
+    const existing = new Set(
+      sheet.getRange(1, 1, sheet.getLastRow(), C.body).getValues().map((r) => rowKey(r)),
+    );
 
-    const rows = source.getRange(last + 1, 1, end - last, C.sender).getValues();
     for (const r of rows) {
-      last++;
-      if (String(r[C.body - 1]).trim() !== '') {
-        const row = sheet.getLastRow() + 1;
-        sheet.getRange(row, 1, 1, C.sender).setValues([r]);
-        fillRow(sheet, row);
-        added++;
-      }
-      // 1行ごとに記録して、途中で止まっても同じ行を二重に追記しない
-      props.setProperty('LAST_SOURCE_ROW', String(last));
+      if (added >= MENU_BATCH) break;
+      if (String(r[C.body - 1]).trim() === '' || existing.has(rowKey(r))) continue;
+      const row = sheet.getLastRow() + 1;
+      sheet.getRange(row, 1, 1, C.sender).setValues([r]);
+      existing.add(rowKey(r));
+      fillRow(sheet, row);
+      added++;
     }
   });
   ss.toast(`${added}行を追記しました`);
+}
+
+function rowKey(r) {
+  const date = r[C.date - 1];
+  return `${date instanceof Date ? date.getTime() : String(date)}|${String(r[C.body - 1]).trim()}`;
 }
 
 // フォーム送信時に失敗した行の再処理用
