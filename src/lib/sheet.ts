@@ -85,6 +85,16 @@ export function sanitize(text: string): string {
     .trim();
 }
 
+// シートの日時は日本時間。ビルドする環境(Cloudflare は UTC)のタイムゾーンに関係なく、日本時間として読む
+const JST_OFFSET = 9 * 60 * 60 * 1000;
+
+export function parseJst(text: string): Date {
+  const m = text.match(/(\d{4})\D(\d{1,2})\D(\d{1,2})(?:\D+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if (!m) return new Date(NaN);
+  const [, y, mo, d, h = '0', mi = '0', s = '0'] = m;
+  return new Date(Date.UTC(+y, +mo - 1, +d, +h, +mi, +s) - JST_OFFSET);
+}
+
 async function loadCsv(): Promise<string> {
   const url = import.meta.env.SHEET_CSV_URL;
   if (url) {
@@ -107,7 +117,7 @@ export async function getCases(): Promise<Case[]> {
   cache = data
     .filter((r) => (r[COL.body] ?? '').trim() !== '' && !EXCLUDED_METHODS.has(r[COL.method] ?? ''))
     .map((r) => ({
-      date: new Date((r[COL.date] ?? '').replace(/\//g, '-').replace(' ', 'T')),
+      date: parseJst(r[COL.date] ?? ''),
       media: r[COL.media] || 'SMS',
       spoof: r[COL.spoof] || 'その他',
       method: r[COL.method] || 'その他',
@@ -139,5 +149,6 @@ export async function getGroups(): Promise<CaseGroup[]> {
 }
 
 export function formatDate(d: Date): string {
-  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+  const jst = new Date(d.getTime() + JST_OFFSET);
+  return `${jst.getUTCFullYear()}年${jst.getUTCMonth() + 1}月${jst.getUTCDate()}日`;
 }
