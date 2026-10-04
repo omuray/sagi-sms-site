@@ -5,8 +5,14 @@ import { getGroups, formatDate } from '../../lib/sheet';
 const groups = await getGroups();
 const bySpoof = new Map<string, typeof groups>();
 for (const g of groups) bySpoof.set(g.spoof, [...(bySpoof.get(g.spoof) ?? []), g]);
+const top = [...bySpoof]
+  .map(([spoof, list]) => ({ spoof, total: list.reduce((n, g) => n + g.total, 0) }))
+  .sort((a, b) => b.total - a.total)
+  .slice(0, 3)
+  .map((s) => s.spoof);
+const description = `${top.join('・')}など${bySpoof.size}のなりすまし先をかたる詐欺SMS・フィッシングメール${groups.length}種類を、なりすまし先ごとに一覧で確認できます。`;
 ---
-<Base title="詐欺事例一覧">
+<Base title="詐欺事例一覧" description={description}>
   <div class="crumb"><a href="/">ホーム</a> › 詐欺事例</div>
   <div class="layout">
     <div class="article">

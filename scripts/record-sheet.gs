@@ -132,7 +132,7 @@ function fillRow(sheet, row) {
 
 // URLを抜き出してリンクにならない形にする(公開サイトの defang と同じ形式)
 function extractUrls(text) {
-  const urls = text.match(/https?:\/\/[!-~]+/g) || [];
+  const urls = text.match(/https?:\/\/[!-~\p{L}\p{N}\p{S}]+/gu) || [];
   return [...new Set(urls)]
     .map((u) => u.replace(/^http/, 'hxxp').replace(/\./g, '[.]'))
     .join(' / ');
@@ -141,7 +141,7 @@ function extractUrls(text) {
 // URL・空白・見えない文字・HTMLタグの違いは無視して文面を比べる
 function normalize(text) {
   return String(text)
-    .replace(/https?:\/\/[!-~]+/g, '')
+    .replace(/https?:\/\/[!-~\p{L}\p{N}\p{S}]+/gu, '')
     .replace(/<[^>]+>/g, '')
     .replace(/\*\*/g, '')
     .replace(/[\s\u200B-\u200F\u2060-\u2064\uFEFF\u034F]/g, '');

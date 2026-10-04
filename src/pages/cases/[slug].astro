@@ -3,6 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import { getGroups, formatDate, type CaseGroup } from '../../lib/sheet';
+import { METHOD_SHORT } from '../../lib/slugs';
 
 export async function getStaticPaths() {
   const groups = await getGroups();
@@ -12,12 +13,17 @@ export async function getStaticPaths() {
 const { group } = Astro.props as { group: CaseGroup };
 const guide = (await getEntry('guides', group.slug)) ?? (await getEntry('guides', 'default'));
 const { Content } = await render(guide!);
-const title = `${group.spoof}を装った「${group.method}」${group.media}に注意`;
+// 例:Amazon「支払い情報の更新」詐欺メールの文面と見分け方
+const method = group.method === 'その他' ? '' : `「${METHOD_SHORT[group.method] ?? group.method}」`;
+const title = group.media === '電話'
+  ? `${group.spoof}${method}詐欺電話の内容と見分け方`
+  : `${group.spoof}${method}詐欺${group.media}の文面と見分け方`;
+const description = `${group.spoof}を装った「${group.method}」の詐欺${group.media}を${group.total}件確認(最新の受信:${formatDate(group.latest)})。実際に届いた文面${group.cases.length}種類と見分け方、URLを開いてしまったときの対処法をまとめています。`;
 const related = (await getGroups()).filter((g) => g.slug !== group.slug).slice(0, 3);
 // PR枠:アフィリエイトのURLを貼ると表示される(空のあいだはPR枠ごと出さない)
 const prUrl = '';
 ---
-<Base title={title} description={guide!.data.summary}>
+<Base title={title} description={description}>
   <div class="crumb"><a href="/">ホーム</a> › <a href="/cases/">詐欺事例</a> › {group.spoof}</div>
   <div class="layout">
     <article class="article">

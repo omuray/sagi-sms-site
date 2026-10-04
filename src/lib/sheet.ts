@@ -37,10 +37,18 @@ export type CaseGroup = {
 };
 
 // URLをリンクにならない形にする
+// ドメインに装飾文字(ⓦ 𝕪 など)が混ざっていても最後まで無害化する。無害化済み(hxxp)の残りの「.」も直す
 export function defang(text: string): string {
-  return text.replace(/https?:\/\/[!-~]+/g, (u) =>
-    u.replace(/^http/, 'hxxp').replace(/\./g, '[.]'),
+  return text.replace(/h(?:tt|xx)ps?:\/\/[!-~\p{L}\p{N}\p{S}]+/gu, (u) =>
+    u.replace(/^http/, 'hxxp').replace(/(?<!\[)\.(?!\])/g, '[.]'),
   );
+}
+
+// URLに含まれる受信者固有の値(ログインID・パスワード・メールアドレスを符号化した文字列など)を伏せる
+export function maskUrlParams(text: string): string {
+  return text
+    .replace(/([?&;](?:id|uid|mid|user|userid|login|pass|pw|passwd|password|email|mail|token|key|code|dst)=)[^\s&#]+/gi, '$1***')
+    .replace(/\?[A-Za-z0-9+\/_%-]{20,}={0,2}/g, '?***');
 }
 
 // 電話番号(区切りあり・なし、国際表記を含む)
@@ -59,6 +67,8 @@ export function sanitize(text: string): string {
     .replace(/(?:[#.@\w-][\w\s,.#:>*()-]*)?\{[^{}]*[:;][^{}]*\}/g, ' ')
     .replace(/@media[^{]*\{\s*\}/g, ' ')
     .replace(/\*\*/g, '')
+    // URLのログインID・パスワードや、メールアドレスを符号化した値を伏せる
+    .replace(/h(?:tt|xx)ps?:\/\/[!-~\p{L}\p{N}\p{S}]+/gu, maskUrlParams)
     // メールアドレスを伏せる(URLの一部は対象外)
     .replace(/(^|[^\/\w.-])[\w.+-]+@[\w-]+(\.[\w-]+)+/g, '$1[メールアドレス]')
     // 見えない文字で分割されていたアドレスの前半も消す
@@ -100,7 +110,7 @@ export async function getCases(): Promise<Case[]> {
       spoof: r[COL.spoof] || 'その他',
       method: r[COL.method] || 'その他',
       body: defang(sanitize(r[COL.body])),
-      url: r[COL.url] ? defang(r[COL.url]) : '',
+      url: r[COL.url] ? defang(maskUrlParams(r[COL.url])) : '',
       official: (r[COL.official] ?? '').trim(),
       count: Number(r[COL.count]) || 1,
     }))
