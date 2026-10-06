@@ -82,4 +82,4 @@ APIエラーなどで失敗した行はD列が空のまま残り、K列にエラ
 | `src/lib/slugs.ts` | プルダウンの選択肢とURL名の対応。選択肢を増やしたら追記 |
 | `src/lib/sheet.ts` | シートの読み込み。見出し名を変えたら上部の COL を修正 |
 | `src/styles/global.css` | デザイン |
-| `astro.config.mjs` | 独自ドメインを取ったら site を書き換え |
+| `astro.config.mjs` | サイトのURL(site)。ドメインを変えたらここを書き換える(現在は https://sagi-sms.com) |
