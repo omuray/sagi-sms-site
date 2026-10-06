@@ -66,8 +66,10 @@ const jsonLd = [
     publisher: { '@type': 'Organization', name: '詐欺SMS実録ノート', url: new URL('/', site).href },
   },
 ];
-// PR枠:アフィリエイトのURLを貼ると表示される(空のあいだはPR枠ごと出さない)
-const prUrl = '';
+// PR枠:A8.net の広告リンク(ウイルスバスター クラウド)。prUrl を空にするとPR枠ごと出さない
+// prPixel は A8.net の表示回数の計測用画像。リンクコードの <img> の src をそのまま入れる
+const prUrl = 'https://px.a8.net/svt/ejp?a8mat=4BEAWV+GGEES2+3A66+626XU';
+const prPixel = 'https://www11.a8.net/0.gif?a8mat=4BEAWV+GGEES2+3A66+626XU';
 ---
 <Base title={title} description={description} ogType="article" jsonLd={jsonLd}>
   <div class="crumb"><a href="/">ホーム</a> › <a href="/cases/">詐欺事例</a> › <a href={spoofAnchor}>{group.spoof}</a> › {methodShort}</div>
@@ -119,8 +121,9 @@ const prUrl = '';
       {prUrl && (
         <div class="panel pr" style="margin-top:16px">
           <p style="margin:0 0 12px"><span class="pr-label">PR</span><strong>さらに強化したい方へ</strong></p>
-          <p style="margin:0 0 12px"><strong>ウイルスバスター モバイル</strong>:詐欺SMSやフィッシングメールに含まれる危険なURLを判定し、偽サイトを開く前に警告します。キャリアのフィルタをすり抜けたメッセージへの備えに。</p>
-          <a class="btn" href={prUrl} target="_blank" rel="sponsored noopener">無料体験版を見る</a>
+          <p style="margin:0 0 12px"><strong>ウイルスバスター クラウド</strong>:トレンドマイクロのセキュリティソフトです。危険なウェブサイトへのアクセスをブロックする機能があり、詐欺メッセージのURLを誤って開いてしまったときの備えになります。パソコンとスマホの両方で使えます。</p>
+          <a class="btn" href={prUrl} target="_blank" rel="sponsored nofollow noopener">公式オンラインショップを見る</a>
+          <img src={prPixel} width="1" height="1" alt="" loading="lazy" style="border:0;position:absolute" />
         </div>
       )}
 
