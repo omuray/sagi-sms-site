@@ -2,6 +2,7 @@ import Papa from 'papaparse';
 import fs from 'node:fs/promises';
 import { SPOOF_SLUGS, METHOD_SLUGS, EXCLUDED_METHODS, toSlug } from './slugs';
 import { OFFICIAL_LINKS } from './officials';
+import { checkLinks } from './link-check';
 
 // 公開用シートの見出し名(シート側で変えたらここも変える)
 const COL = {
@@ -137,6 +138,23 @@ export async function getCases(): Promise<Case[]> {
   return cache;
 }
 
+let deadLinkCache: Promise<Set<string>> | null = null;
+
+// リンク切れの公式注意喚起ページを調べる(ビルド1回につき1度だけ。結果はビルドのログに出す)
+// 開発中(npm run dev)は調べない
+function deadLinks(urls: string[]): Promise<Set<string>> {
+  if (import.meta.env.DEV) return Promise.resolve(new Set());
+  return (deadLinkCache ??= checkLinks(urls).then((results) => {
+    const all = [...results.values()];
+    const dead = all.filter((r) => r.status === 'dead');
+    const unknown = all.filter((r) => r.status === 'unknown');
+    console.log(`[link-check] 公式注意喚起のリンク:${all.length}件中、リンク切れ${dead.length}件、確認できず${unknown.length}件`);
+    for (const r of dead) console.warn(`[link-check] リンク切れのため表示しません(${r.reason}): ${r.url}`);
+    for (const r of unknown) console.log(`[link-check] 確認できないため表示を続けます(${r.reason}): ${r.url}`);
+    return new Set(dead.map((r) => r.url));
+  }));
+}
+
 // なりすまし先×手口で1ページにまとめる
 export async function getGroups(): Promise<CaseGroup[]> {
   const cases = await getCases();
@@ -152,8 +170,10 @@ export async function getGroups(): Promise<CaseGroup[]> {
     g.total += c.count;
     if (!g.official && c.official) g.official = c.official;
   }
-  // シートに公式注意喚起の入力がないページは、対応表(officials.ts)のURLを使う
-  for (const g of map.values()) g.official ||= OFFICIAL_LINKS[g.spoof] ?? '';
+  // 公式注意喚起は、シートの入力 → 対応表(officials.ts)の順で、リンク切れでないものを使う。どちらも切れていれば出さない
+  const candidates = new Map([...map.values()].map((g) => [g, [g.official, OFFICIAL_LINKS[g.spoof] ?? ''].filter((u) => u !== '')]));
+  const dead = await deadLinks([...candidates.values()].flat());
+  for (const [g, urls] of candidates) g.official = urls.find((u) => !dead.has(u)) ?? '';
   return [...map.values()].sort((a, b) => b.latest.getTime() - a.latest.getTime());
 }
 
