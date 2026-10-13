@@ -27,6 +27,7 @@ export const OFFICIAL_LINKS: Record<string, string> = {
   // ポイント・マイル・交通
   'ANA': 'https://www.ana.co.jp/ja/jp/share/caution_phishing/',
   'JAL': 'https://www.jal.co.jp/jp/ja/footer/phishing/',
+  'JRE POINT': 'https://www.jrepoint.jp/information/jrepoint-office/20260512001',
   // Vポイントは三井住友カードのページ
   'Vポイント': 'https://www.smbc-card.com/mem/service/sec/phishing01.jsp',
   'えきねっと(JR東日本)': 'https://www.eki-net.com/top/oshirase/security/',
