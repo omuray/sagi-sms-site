@@ -28,8 +28,11 @@ const quote = opening.length > 30 ? `${opening.slice(0, 30).join('')}…` : open
 const mediaLabel = group.media === 'SNS' ? 'SNSのメッセージ' : group.media;
 const spoofPhrase = spoofLabel ? `${spoofLabel}を装った` : '';
 const description = `${spoofPhrase}「${group.method}」の詐欺${group.media}を${group.total}件確認(最新の受信:${formatDate(group.latest)})。実際に届いた文面${group.cases.length}種類と見分け方、URLを開いてしまったときの対処法をまとめています。`;
-// ほかの事例:同じなりすまし先 → 同じ手口 → 新しい順で、5件まで
-const others = (await getGroups()).filter((g) => g.slug !== group.slug);
+// ほかの事例:同じなりすまし先 → 同じ手口 → そのほか、の順で5件まで
+// それぞれ、新しい順の並びでこのページの次から選ぶ(一巡したら先頭に戻る)。新しいページにリンクが偏らないようにするため
+const all = await getGroups();
+const at = all.findIndex((g) => g.slug === group.slug);
+const others = [...all.slice(at + 1), ...all.slice(0, at)];
 const related = [
   ...others.filter((g) => g.spoof === group.spoof),
   ...others.filter((g) => g.spoof !== group.spoof && g.method === group.method),

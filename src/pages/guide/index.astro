@@ -4,7 +4,7 @@ import Sidebar from '../../components/Sidebar.astro';
 import { getGroups } from '../../lib/sheet';
 import { breadcrumb } from '../../lib/jsonld';
 
-// 手口ごとに、件数の多いなりすまし先の事例ページへリンクする
+// 手口ごとに、すべての事例ページへリンクする(件数の多いなりすまし先から順に)
 const groups = await getGroups();
 const byMethod = new Map<string, typeof groups>();
 for (const g of groups) byMethod.set(g.method, [...(byMethod.get(g.method) ?? []), g]);
@@ -69,14 +69,14 @@ const methods = [...byMethod]
       {methods.length > 0 && (
         <>
           <h2>手口別の事例</h2>
-          <ul class="list">
+          <div class="method-list">
             {methods.map((m) => (
-              <li>
-                <span class="t">{m.method}</span>({m.total}件)<br />
-                <span class="note">{m.list.slice(0, 4).map((g, i) => <>{i > 0 && '/'}<a href={`/cases/${g.slug}/`}>{g.spoof}</a></>)}</span>
-              </li>
+              <section class="panel">
+                <strong>{m.method}</strong>({m.total}件)
+                <div class="chips">{m.list.map((g) => <a href={`/cases/${g.slug}/`}>{g.spoof}</a>)}</div>
+              </section>
             ))}
-          </ul>
+          </div>
         </>
       )}
     </article>
