@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
-import phoneCheck from './integrations/phone-check.mjs';
+import maskCheck from './integrations/mask-check.mjs';
 
 // canonical・sitemap・robots.txt・OGP のURLはここから作られる
 const site = 'https://sagi-sms.com';
@@ -14,6 +14,6 @@ export default defineConfig({
       filter: (page) => !/\/cases\/[^/]+\/$/.test(page),
       customSitemaps: [new URL('sitemap-cases.xml', site).href],
     }),
-    phoneCheck(),
+    maskCheck(),
   ],
 });
