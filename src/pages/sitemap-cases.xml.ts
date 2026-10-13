@@ -2,7 +2,8 @@ import type { APIRoute } from 'astro';
 import { getGroups } from '../lib/sheet';
 
 // 事例ページの sitemap。更新日(lastmod)は、そのページで最新の受信日
-// ほかのページは @astrojs/sitemap が sitemap-index.xml に出す(astro.config.mjs の filter で事例ページを除外)
+// ほかのページは @astrojs/sitemap が sitemap-0.xml に出す(astro.config.mjs の filter で事例ページを除外)
+// このファイルは astro.config.mjs の customSitemaps で sitemap-index.xml から参照される
 export const GET: APIRoute = async ({ site }) => {
   const urls = (await getGroups()).map((g) => {
     const loc = new URL(`/cases/${g.slug}/`, site).href;
