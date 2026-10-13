@@ -92,6 +92,7 @@ APIエラーなどで失敗した行はD列が空のまま残り、K列にエラ
 |---|---|
 | `src/content/guides/*.md` | 手口ごとの見分け方・対処法。ファイル名はページのURL名(例:sagawa-delivery.md)。ない手口は default.md を使う |
 | `src/lib/slugs.ts` | プルダウンの選択肢とURL名の対応。選択肢を増やしたら追記 |
+| `src/lib/officials.ts` | なりすまし先ごとの公式注意喚起ページのURL。シートの「公式注意喚起」列が空のときに使う。URLが変わったらここを直す |
 | `src/lib/sheet.ts` | シートの読み込み。見出し名を変えたら上部の COL を修正 |
 | `src/components/SearchBox.astro` | 検索窓(トップ・事例一覧・404に設置)。案内文や結果の表示を変えるときはここ |
 | `src/lib/search.ts` | 検索の照合。似た文面とみなす基準(SIMILAR_MIN など)を変えるときはここ |

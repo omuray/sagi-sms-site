@@ -1,6 +1,7 @@
 import Papa from 'papaparse';
 import fs from 'node:fs/promises';
 import { SPOOF_SLUGS, METHOD_SLUGS, EXCLUDED_METHODS, toSlug } from './slugs';
+import { OFFICIAL_LINKS } from './officials';
 
 // 公開用シートの見出し名(シート側で変えたらここも変える)
 const COL = {
@@ -151,6 +152,8 @@ export async function getGroups(): Promise<CaseGroup[]> {
     g.total += c.count;
     if (!g.official && c.official) g.official = c.official;
   }
+  // シートに公式注意喚起の入力がないページは、対応表(officials.ts)のURLを使う
+  for (const g of map.values()) g.official ||= OFFICIAL_LINKS[g.spoof] ?? '';
   return [...map.values()].sort((a, b) => b.latest.getTime() - a.latest.getTime());
 }
 
