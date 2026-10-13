@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
+import SearchBox from '../../components/SearchBox.astro';
 import { getGroups, formatDate } from '../../lib/sheet';
 import { breadcrumb } from '../../lib/jsonld';
 const groups = await getGroups();
@@ -18,6 +19,7 @@ const description = `${top.join('・')}など${bySpoof.size}のなりすまし�
   <div class="layout">
     <div class="article">
       <h1>詐欺事例一覧</h1>
+      <SearchBox />
       {[...bySpoof].map(([spoof, list]) => (
         <section>
           <h2 id={spoof}>{spoof}</h2>

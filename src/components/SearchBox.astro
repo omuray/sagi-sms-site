@@ -1,0 +1,122 @@
+---
+// 届いたメッセージの一部から、同じ文面の事例を探す検索窓
+// 照合はブラウザの中だけで行い、入力した内容は外部に送らない(src/lib/search.ts)
+// 1ページに1つだけ置く。ヘッダーの「検索」(/#search-input)は、トップページのこの入力欄にカーソルを移す
+---
+<section class="search" data-search>
+  <label for="search-input">届いたメッセージから探す</label>
+  <textarea id="search-input" rows="2" autocomplete="off" spellcheck="false" placeholder="メッセージの一部を貼り付けてください(例:お荷物のお届けにあがりましたが)"></textarea>
+  <p class="note">なりすまし先や手口の名前でも探せます。入力した内容はこの端末の中だけで照合し、外部には送信しません。</p>
+  <noscript><p class="note">検索には JavaScript が必要です。<a href="/cases/">詐欺事例の一覧</a>から探してください。</p></noscript>
+  <div class="search-result" data-search-result aria-live="polite"></div>
+</section>
+
+<script>
+  import { prepare, search, snippet, normalize, MIN_QUERY, type MatchKind, type SearchEntry } from '../lib/search';
+
+  const LIMIT = 10;
+  const KIND_LABEL: Record<MatchKind, string> = {
+    exact: '入力した文面を含む',
+    meta: 'なりすまし先・手口が一致',
+    words: '入力した語をすべて含む',
+    similar: '似た文面を掲載',
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-search]');
+  const input = root?.querySelector<HTMLTextAreaElement>('textarea');
+  const result = root?.querySelector<HTMLElement>('[data-search-result]');
+
+  if (root && input && result) {
+    let index: Promise<ReturnType<typeof prepare>> | null = null;
+    // 索引は入力欄に触れたときに初めて読み込む
+    const load = () =>
+      (index ??= fetch('/search-index.json')
+        .then((res) => {
+          if (!res.ok) throw new Error(String(res.status));
+          return res.json() as Promise<SearchEntry[]>;
+        })
+        .then(prepare)
+        .catch((e) => {
+          index = null;
+          throw e;
+        }));
+
+    const el = <K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text = '') => {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text) node.textContent = text;
+      return node;
+    };
+
+    const message = (text: string) => el('p', 'search-status', text);
+
+    const render = async () => {
+      const query = input.value;
+      if ([...normalize(query)].length < MIN_QUERY) {
+        result.replaceChildren();
+        return;
+      }
+      let hits;
+      try {
+        hits = search(await load(), query);
+      } catch {
+        const p = message('検索の準備に失敗しました。');
+        const a = el('a', '', '詐欺事例の一覧');
+        a.href = '/cases/';
+        p.append(a, 'から探してください。');
+        result.replaceChildren(p);
+        return;
+      }
+      // 読み込みを待つ間に入力が変わっていたら、新しいほうに任せる
+      if (input.value !== query) return;
+
+      if (hits.length === 0) {
+        const box = el('div', 'search-empty');
+        box.append(el('strong', '', '同じ文面は見つかりませんでした。'));
+        box.append(el('p', '', '掲載がないだけで、安全なメッセージとは限りません。メッセージ内のURLや電話番号は使わず、公式アプリや公式サイトから確認してください。'));
+        const links = el('p');
+        const guide = el('a', '', '見分け方と対処法(対策ガイド)');
+        guide.href = '/guide/';
+        const cases = el('a', '', 'なりすまし先ごとの一覧');
+        cases.href = '/cases/';
+        links.append(guide, ' / ', cases);
+        box.append(links);
+        result.replaceChildren(box);
+        return;
+      }
+
+      const found = hits.some((h) => h.kind === 'exact')
+        ? `入力した文面を含む事例が${hits.length}件あります。`
+        : `近い事例が${hits.length}件あります。`;
+      const list = el('ul', 'list');
+      for (const h of hits.slice(0, LIMIT)) {
+        const a = el('a');
+        a.href = `/cases/${h.entry.slug}/`;
+        a.append(el('span', 't', `${h.entry.spoof}を装った「${h.entry.method}」`), el('br'));
+        a.append(el('span', 'note', `${KIND_LABEL[h.kind]}/${h.entry.media}/${h.entry.total}件`));
+        if (h.body) {
+          const s = snippet(h.body, query);
+          const line = el('span', 'search-snippet');
+          line.append(s.before);
+          if (s.match) line.append(el('mark', '', s.match), s.after);
+          a.append(line);
+        }
+        const li = el('li');
+        li.append(a);
+        list.append(li);
+      }
+      const nodes: Node[] = [message(found), list];
+      if (hits.length > LIMIT) nodes.push(el('p', 'note', `ほかに${hits.length - LIMIT}件あります。入力を長くすると絞り込めます。`));
+      result.replaceChildren(...nodes);
+    };
+
+    let timer = 0;
+    input.addEventListener('focus', () => void load().catch(() => {}), { once: true });
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = window.setTimeout(render, 120);
+    });
+    // 戻る操作などで入力が残っているときは、結果も出し直す
+    if (input.value.trim() !== '') render();
+  }
+</script>

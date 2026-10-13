@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Sidebar from '../components/Sidebar.astro';
+import SearchBox from '../components/SearchBox.astro';
 import { getGroups, formatDate } from '../lib/sheet';
 const latest = (await getGroups()).slice(0, 5);
 ---
@@ -9,6 +10,7 @@ const latest = (await getGroups()).slice(0, 5);
     <div class="article">
       <h1>ページが見つかりません</h1>
       <p>お探しのページは、削除されたかURLが変わった可能性があります。事例は、なりすまし先や手口の整理にあわせてページをまとめ直すことがあります。</p>
+      <SearchBox />
       <p><a href="/cases/">詐欺事例の一覧から探す</a></p>
       <h2>最近の事例</h2>
       <ul class="list">

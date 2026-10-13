@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Sidebar from '../components/Sidebar.astro';
+import SearchBox from '../components/SearchBox.astro';
 import { getGroups, formatDate } from '../lib/sheet';
 import { website } from '../lib/jsonld';
 const groups = await getGroups();
@@ -12,6 +13,7 @@ const description = `実際に届いた詐欺SMS・フィッシングメール${
     <div class="article">
       <h1>実際に届いた詐欺SMS・フィッシングメールの事例と対策</h1>
       <p>運営者の手元に毎日届く詐欺SMSやフィッシングメールを記録し、見分け方と対処法をまとめています。「このメッセージは本物?」と迷ったら、同じ文面が届いていないか確かめてください。</p>
+      <SearchBox />
       <p><a href="/guide/">見分け方と対処法をまとめた対策ガイドはこちら</a></p>
       <h2>最近の事例</h2>
       <ul class="list">

@@ -1,0 +1,3 @@
+# 検索用の索引は検索結果に出さない(Cloudflare Pages の設定ファイル)
+/search-index.json
+  X-Robots-Tag: noindex
