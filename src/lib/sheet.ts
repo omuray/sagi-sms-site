@@ -48,12 +48,30 @@ export function defang(text: string): string {
 
 // URLに含まれる受信者固有の値(ログインID・パスワード・メールアドレスを符号化した文字列など)を伏せる
 // 12桁以上の数字(送信ごとに変わる追跡番号の可能性がある)は先頭4桁だけ残す(例:2026**********)
+// メッセージアプリの友だち追加・招待リンク(line.me/ti/p/〇〇、t.me/〇〇 など)は、ドメインより後ろのアカウント部分を丸ごと伏せる
 export function maskUrlParams(text: string): string {
   return text
+    .replace(INVITE_URL, '$1***')
     .replace(/([?&;](?:id|uid|mid|user|userid|login|pass|pw|passwd|password|email|mail|token|key|code|dst)=)[^\s&#]+/gi, '$1***')
     .replace(/\?[A-Za-z0-9+\/_%-]{20,}={0,2}/g, '?***')
     .replace(/(?<!\d)(\d{4})(\d{8,})(?!\d)/g, (_, head, rest) => head + '*'.repeat(rest.length));
 }
+
+// 友だち追加・招待リンクのドメイン。後ろの英数字・記号の部分がアカウントを表す
+// 例:line.me/ti/p/〇〇、lin.ee/〇〇、t.me/〇〇、wa.me/〇〇、chat.whatsapp.com/〇〇、discord.gg/〇〇、instagram.com/〇〇
+const INVITE_DOMAINS = [
+  'line.me', 'lin.ee', 't.me', 'telegram.me', 'telegram.org', 'wa.me', 'chat.whatsapp.com', 'discord.gg', 'discord.com',
+  'm.me', 'instagram.com', 'x.com', 'twitter.com', 'tiktok.com', 'facebook.com', 'signal.me', 'qm.qq.com', 'u.wechat.com',
+];
+// 無害化済みの「[.]」にも合うようにする
+const INVITE_URL = new RegExp(
+  `^(h(?:tt|xx)ps?:\\/\\/(?:www\\[?\\.\\]?)?(?:${INVITE_DOMAINS.map((d) => d.replace(/\./g, '\\[?\\.\\]?')).join('|')})\\/)[!-~]+`,
+  'i',
+);
+
+// メッセージアプリの名前に続くID(例:LINE:wl4281 → LINE:***、Telegram:@abc → Telegram:***)
+// 「ライン」はホットラインなどと紛らわしいので対象にしない。LINE ID:〇〇 は下の ID の規則で伏せる
+const APP_ID = /((?<![A-Za-z])(?:LINE|Line|Telegram|テレグラム|WhatsApp|Signal|WeChat|微信|Instagram|インスタ(?:グラム)?|Discord|KakaoTalk|Kakao|カカオトーク|Skype|Viber|TikTok|Facebook|Messenger|QQ|Zalo|Snapchat|Potato)\s*(?:アカウント)?\s*[=:：＝]\s*)@?[A-Za-z0-9][\w.-]*/g;
 
 // 電話番号(区切りあり・なし、国際表記を含む)
 // 3つ目は区切りなしの日本の国際表記(例:818054699501、+818054699501)
@@ -79,6 +97,9 @@ export function sanitize(text: string): string {
     .replace(/[\w.+-]+ +\[メールアドレス\]/g, '[メールアドレス]')
     // 全角の数字・記号を半角にそろえる(全角で書かれた電話番号も伏せるため)
     .replace(/[０-９＋－]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
+    // メッセージアプリのIDと、見出しのない @〇〇(Telegram や X のアカウント名)を伏せる。メールアドレスは上で伏せ済み
+    .replace(APP_ID, '$1***')
+    .replace(/(?<![\w.@\/\[])@[A-Za-z0-9_][\w.]{2,}/g, '@***')
     // IDを伏せる(例:ID=98893885 → ID=***、LINE ID:abc123 → LINE ID:***)
     .replace(/((?<![A-Za-z])(?:ID|Id|id|ＩＤ)\s*[=:：＝]\s*)[A-Za-z0-9][\w.@-]*/g, '$1***')
     // 英字の短い見出しに続く識別番号も伏せる(例:CL=37731562597282 → CL=***)

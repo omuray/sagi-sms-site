@@ -29,6 +29,21 @@ const ERRORS = [
     label: '〇〇番号',
     pattern: /番号\s*[=:：＝]\s*[A-Za-z0-9][A-Za-z0-9-]{3,}/g,
   },
+  {
+    // LINE:wl4281、Telegram:@abc など、メッセージアプリの名前に続くID
+    label: 'アプリのID',
+    pattern: /(?<![A-Za-z])(?:LINE|Line|Telegram|テレグラム|WhatsApp|Signal|WeChat|微信|Instagram|インスタ(?:グラム)?|Discord|KakaoTalk|Kakao|カカオトーク|Skype|Viber|TikTok|Facebook|Messenger|QQ|Zalo|Snapchat|Potato)\s*(?:アカウント)?\s*[=:：＝]\s*@?[A-Za-z0-9][\w.-]*/g,
+  },
+  {
+    // 見出しのない @〇〇(Telegram や X のアカウント名)。伏せ済みの @*** は対象外
+    label: '@アカウント名',
+    pattern: /(?<![\w.@\/\[])@[A-Za-z0-9_][\w.]{2,}/g,
+  },
+  {
+    // 友だち追加・招待リンク(line[.]me/ti/p/〇〇 など)のアカウント部分。伏せ済みの /*** は対象外
+    label: '招待リンク',
+    pattern: /(?<![\w-])(?:line\[\.\]me|lin\[\.\]ee|t\[\.\]me|telegram\[\.\](?:me|org)|wa\[\.\]me|chat\[\.\]whatsapp\[\.\]com|discord\[\.\](?:gg|com)|m\[\.\]me|instagram\[\.\]com|x\[\.\]com|twitter\[\.\]com|tiktok\[\.\]com|facebook\[\.\]com|signal\[\.\]me|qm\[\.\]qq\[\.\]com|u\[\.\]wechat\[\.\]com)\/(?!\*\*\*)[!-~]+/gi,
+  },
 ];
 
 // 警告だけ出すもの(金額や日付と紛らわしいので、ビルドは止めない)
@@ -39,12 +54,13 @@ const WARNINGS = [
   },
 ];
 
+// ページ(.html)と、本文を含むサイト内検索の索引(search-index.json)を調べる
 async function htmlFiles(dir) {
   const out = [];
   for (const e of await fs.readdir(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
     if (e.isDirectory()) out.push(...(await htmlFiles(p)));
-    else if (e.name.endsWith('.html')) out.push(p);
+    else if (e.name.endsWith('.html') || e.name === 'search-index.json') out.push(p);
   }
   return out;
 }
@@ -88,7 +104,7 @@ export default function maskCheck() {
         }
         if (errors.length > 0) {
           throw new Error(
-            `伏せられていない電話番号・ID・番号が見つかったため、ビルドを止めました。\n` +
+            `伏せられていない電話番号・ID・番号・アプリのアカウントが見つかったため、ビルドを止めました。\n` +
               `src/lib/sheet.ts の sanitize を直すか、シートの本文を修正してください。\n` +
               `手書きのガイド(src/content/guides/*.md)に引用した値が原因のこともあります。\n` +
               errors.map((f) => `  - ${f}`).join('\n'),
