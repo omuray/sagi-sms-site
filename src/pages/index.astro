@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Sidebar from '../components/Sidebar.astro';
 import SearchBox from '../components/SearchBox.astro';
 import { getGroups, formatDate } from '../lib/sheet';
+import { caseLabel } from '../lib/slugs';
 import { website } from '../lib/jsonld';
 const groups = await getGroups();
 const latest = groups.slice(0, 10);
@@ -17,7 +18,7 @@ const description = `実際に届いた詐欺SMS・フィッシングメール${
       <p><a href="/guide/">見分け方と対処法をまとめた対策ガイドはこちら</a></p>
       <h2>最近の事例</h2>
       <ul class="list">
-        {latest.map((g) => <li><a href={`/cases/${g.slug}/`}><span class="t">{g.spoof}を装った「{g.method}」</span><br /><span class="note">{g.media}/最新の受信:{formatDate(g.latest)}/{g.total}件</span></a></li>)}
+        {latest.map((g) => <li><a href={`/cases/${g.slug}/`}><span class="t">{caseLabel(g)}</span><br /><span class="note">{g.media}/最新の受信:{formatDate(g.latest)}/{g.total}件</span></a></li>)}
       </ul>
       <p><a href="/cases/">すべての事例を見る</a></p>
     </div>

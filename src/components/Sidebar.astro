@@ -1,5 +1,6 @@
 ---
 import { getGroups } from '../lib/sheet';
+import { caseLabel } from '../lib/slugs';
 const groups = await getGroups();
 // 直近30日の件数が多い順に5件まで。5件に満たないときは、残りをこれまでの件数が多い順で埋める
 // (30日以内の事例が1〜2件しかない時期に、全ページからのリンクがそのページだけに集まらないようにするため)
@@ -20,7 +21,7 @@ const spoofs = [...new Set(groups.map((g) => g.spoof))];
   {recent.length > 0 && (
     <section class="panel">
       <h2>最近30日に多い手口</h2>
-      <ol>{recent.map((r) => <li><a href={`/cases/${r.g.slug}/`}>{r.g.spoof}の{r.g.method}</a>({r.n}件)</li>)}</ol>
+      <ol>{recent.map((r) => <li><a href={`/cases/${r.g.slug}/`}>{caseLabel(r.g)}</a>({r.n}件)</li>)}</ol>
     </section>
   )}
   {(overall.length > 0 || recent.length === 0) && (
@@ -28,7 +29,7 @@ const spoofs = [...new Set(groups.map((g) => g.spoof))];
       <h2>{recent.length > 0 ? 'これまでに多い手口' : '件数の多い手口'}</h2>
       {overall.length === 0
         ? <p class="note">事例はまだありません。</p>
-        : <ol>{overall.map((r) => <li><a href={`/cases/${r.g.slug}/`}>{r.g.spoof}の{r.g.method}</a>({r.n}件)</li>)}</ol>}
+        : <ol>{overall.map((r) => <li><a href={`/cases/${r.g.slug}/`}>{caseLabel(r.g)}</a>({r.n}件)</li>)}</ol>}
     </section>
   )}
   <section class="panel">

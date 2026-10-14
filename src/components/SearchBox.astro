@@ -92,7 +92,7 @@
       for (const h of hits.slice(0, LIMIT)) {
         const a = el('a');
         a.href = `/cases/${h.entry.slug}/`;
-        a.append(el('span', 't', `${h.entry.spoof}を装った「${h.entry.method}」`), el('br'));
+        a.append(el('span', 't', h.entry.label), el('br'));
         a.append(el('span', 'note', `${KIND_LABEL[h.kind]}/${h.entry.media}/${h.entry.total}件`));
         if (h.body) {
           const s = snippet(h.body, query);

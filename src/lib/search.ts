@@ -2,6 +2,8 @@
 
 export type SearchEntry = {
   slug: string;
+  // 一覧に出す呼び名(例:Amazonを装った「料金未払い・支払い情報の更新」)
+  label: string;
   spoof: string;
   method: string;
   media: string;

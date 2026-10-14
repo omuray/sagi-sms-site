@@ -98,6 +98,18 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'job-side-job': { spoof: '企業名をかたる' },
 };
 
+// 「〇〇を装った」の言い方。事例ページの導入文・説明文と、一覧やリンクの呼び名で使う
+// 表示名がないもの(サービス名なし など)、手口の名前に含まれるもの(有名人なりすまし)は空文字
+export function spoofPhrase(g: { slug: string; spoof: string; method: string }): string {
+  const name = SPOOF_DISPLAY[g.spoof] ?? g.spoof;
+  return TITLE_OVERRIDES[g.slug]?.spoof ?? (name && !g.method.includes(name) ? `${name}を装った` : '');
+}
+
+// 一覧やリンクで使う事例の呼び名。例:Amazonを装った「料金未払い・支払い情報の更新」、企業名をかたる「副業・在宅ワーク勧誘」
+export function caseLabel(g: { slug: string; spoof: string; method: string }): string {
+  return `${spoofPhrase(g)}「${g.method}」`;
+}
+
 // 事例ページを作らない手口(正規の通知など)
 export const EXCLUDED_METHODS = new Set(['正規の通知']);
 
