@@ -3,7 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import { getGroups, formatDate, type CaseGroup } from '../../lib/sheet';
-import { METHOD_SHORT, SPOOF_DISPLAY } from '../../lib/slugs';
+import { METHOD_SHORT, SPOOF_DISPLAY, TITLE_OVERRIDES } from '../../lib/slugs';
 
 export async function getStaticPaths() {
   const groups = await getGroups();
@@ -15,13 +15,16 @@ const guide = (await getEntry('guides', group.slug)) ?? (await getEntry('guides'
 const { Content } = await render(guide!);
 // 例:Amazon「支払い情報の更新」詐欺メールの文面と見分け方
 // なりすまし先は表示名を使い、手口の名前に含まれる場合(有名人「有名人なりすまし」など)は省く
-const methodShort = METHOD_SHORT[group.method] ?? group.method;
+// 呼び名が内容と合わないページは TITLE_OVERRIDES で上書きする
+const override = TITLE_OVERRIDES[group.slug] ?? {};
+const methodShort = override.method ?? METHOD_SHORT[group.method] ?? group.method;
 const method = group.method === 'その他' ? '' : `「${methodShort}」`;
 const spoofName = SPOOF_DISPLAY[group.spoof] ?? group.spoof;
 const spoofLabel = spoofName && !group.method.includes(spoofName) ? spoofName : '';
+const titleSpoof = override.spoof ?? spoofLabel;
 const title = group.media === '電話'
-  ? `${spoofLabel}${method}詐欺電話の内容と見分け方`
-  : `${spoofLabel}${method}詐欺${group.media}の文面と見分け方`;
+  ? `${titleSpoof}${method}詐欺電話の内容と見分け方`
+  : `${titleSpoof}${method}詐欺${group.media}の文面と見分け方`;
 // 本文冒頭の導入文:最新の文面の書き出しを引用して、届いたものと同じか確かめやすくする
 const opening = [...group.cases[0].body.replace(/\s+/g, ' ').trim()];
 const quote = opening.length > 30 ? `${opening.slice(0, 30).join('')}…` : opening.join('');

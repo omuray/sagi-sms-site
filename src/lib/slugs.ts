@@ -90,6 +90,14 @@ export const METHOD_SHORT: Record<string, string> = {
   '当選・プレゼント': '当選',
 };
 
+// ページごとのタイトルの上書き(キーは事例ページの slug)。上の2つの呼び名が内容と合わないページだけ書く
+// spoof はタイトルの先頭に置く言葉、method は手口の短い呼び名(パンくずにも使う)
+export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }> = {
+  'dai-ichi-life-tax': { method: '保険料の未納' },
+  'health-insurance-tax': { method: '保険料の未納' },
+  'job-side-job': { spoof: '企業名をかたる' },
+};
+
 // 事例ページを作らない手口(正規の通知など)
 export const EXCLUDED_METHODS = new Set(['正規の通知']);
 
