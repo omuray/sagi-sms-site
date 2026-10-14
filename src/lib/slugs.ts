@@ -77,6 +77,20 @@ export const SPOOF_DISPLAY: Record<string, string> = {
   '自治体(国民健康保険)': '国民健康保険',
 };
 
+// 分類としてのなりすまし先の表示名(事例一覧の見出し、パンくず、タグ、なりすまし先から探す など)。未登録のものは選択肢の名前をそのまま使う
+// 事例一覧の見出しの id(/cases/#〇〇 のリンク先)は選択肢の名前のままにする
+export const SPOOF_CATEGORY: Record<string, string> = {
+  '不明(有料サイト)': '有料サイト',
+  '不明(サービス名なし)': 'サービス名なし',
+  '有名人(芸能人)': '有名人',
+  '求人・副業(企業名かたり)': '求人・副業',
+  '自治体(国民健康保険)': '国民健康保険',
+};
+
+export function spoofCategory(spoof: string): string {
+  return SPOOF_CATEGORY[spoof] ?? spoof;
+}
+
 // ページのタイトル用の短い呼び名(検索されやすい言い方)。未登録の手口は選択肢の名前をそのまま使う
 export const METHOD_SHORT: Record<string, string> = {
   '料金未払い・支払い情報の更新': '支払い情報の更新',

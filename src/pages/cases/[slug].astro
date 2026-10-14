@@ -3,7 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import { getGroups, formatDate, type CaseGroup } from '../../lib/sheet';
-import { METHOD_SHORT, SPOOF_DISPLAY, TITLE_OVERRIDES, spoofPhrase, caseLabel } from '../../lib/slugs';
+import { METHOD_SHORT, SPOOF_DISPLAY, TITLE_OVERRIDES, spoofPhrase, caseLabel, spoofCategory } from '../../lib/slugs';
 import { getRelated } from '../../lib/related';
 
 export async function getStaticPaths() {
@@ -46,6 +46,7 @@ const site = Astro.site!;
 const pageUrl = new URL(Astro.url.pathname, site).href;
 // パンくず:ホーム › 詐欺事例 › なりすまし先(一覧の該当箇所) › 手口。画面と構造化データで同じ並びにする
 const spoofAnchor = `/cases/#${encodeURIComponent(group.spoof)}`;
+const category = spoofCategory(group.spoof);
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -53,7 +54,7 @@ const jsonLd = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'ホーム', item: new URL('/', site).href },
       { '@type': 'ListItem', position: 2, name: '詐欺事例', item: new URL('/cases/', site).href },
-      { '@type': 'ListItem', position: 3, name: group.spoof, item: new URL(spoofAnchor, site).href },
+      { '@type': 'ListItem', position: 3, name: category, item: new URL(spoofAnchor, site).href },
       { '@type': 'ListItem', position: 4, name: methodShort, item: pageUrl },
     ],
   },
@@ -76,12 +77,12 @@ const prUrl = 'https://px.a8.net/svt/ejp?a8mat=4BEAWV+GGEES2+3A66+626XU';
 const prPixel = 'https://www11.a8.net/0.gif?a8mat=4BEAWV+GGEES2+3A66+626XU';
 ---
 <Base title={title} description={description} ogType="article" jsonLd={jsonLd}>
-  <div class="crumb"><a href="/">ホーム</a> › <a href="/cases/">詐欺事例</a> › <a href={spoofAnchor}>{group.spoof}</a> › {methodShort}</div>
+  <div class="crumb"><a href="/">ホーム</a> › <a href="/cases/">詐欺事例</a> › <a href={spoofAnchor}>{category}</a> › {methodShort}</div>
   <div class="layout">
     <article class="article">
       <div class="tags">
         <span class="tag solid">{group.media}</span>
-        <span class="tag">{group.spoof}</span>
+        <span class="tag">{category}</span>
         <span class="tag">{group.method}</span>
       </div>
       <h1>{title}</h1>
@@ -111,7 +112,7 @@ const prPixel = 'https://www11.a8.net/0.gif?a8mat=4BEAWV+GGEES2+3A66+626XU';
         <>
           <h2>公式の注意喚起</h2>
           <a class="official" href={group.official} target="_blank" rel="noopener">
-            <span><strong>{group.spoof}の公式案内</strong><br /><span class="note">公式サイトで最新の情報を確認できます</span></span>
+            <span><strong>{category}の公式案内</strong><br /><span class="note">公式サイトで最新の情報を確認できます</span></span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg>
           </a>
         </>

@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import { getGroups } from '../../lib/sheet';
 import { breadcrumb } from '../../lib/jsonld';
+import { spoofCategory } from '../../lib/slugs';
 
 // 手口ごとに、すべての事例ページへリンクする(件数の多いなりすまし先から順に)
 const groups = await getGroups();
@@ -73,7 +74,7 @@ const methods = [...byMethod]
             {methods.map((m) => (
               <section class="panel">
                 <strong>{m.method}</strong>({m.total}件)
-                <div class="chips">{m.list.map((g) => <a href={`/cases/${g.slug}/`}>{g.spoof}</a>)}</div>
+                <div class="chips">{m.list.map((g) => <a href={`/cases/${g.slug}/`}>{spoofCategory(g.spoof)}</a>)}</div>
               </section>
             ))}
           </div>

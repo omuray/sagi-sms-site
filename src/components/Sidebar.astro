@@ -1,6 +1,6 @@
 ---
 import { getGroups } from '../lib/sheet';
-import { caseLabel } from '../lib/slugs';
+import { caseLabel, spoofCategory } from '../lib/slugs';
 const groups = await getGroups();
 // 直近30日の件数が多い順に5件まで。5件に満たないときは、残りをこれまでの件数が多い順で埋める
 // (30日以内の事例が1〜2件しかない時期に、全ページからのリンクがそのページだけに集まらないようにするため)
@@ -35,7 +35,7 @@ const spoofs = [...new Set(groups.map((g) => g.spoof))];
   <section class="panel">
     <h2>なりすまし先から探す</h2>
     <div class="chips">
-      {spoofs.map((s) => <a href={`/cases/#${encodeURIComponent(s)}`}>{s}</a>)}
+      {spoofs.map((s) => <a href={`/cases/#${encodeURIComponent(s)}`}>{spoofCategory(s)}</a>)}
     </div>
   </section>
 </aside>
