@@ -26,7 +26,7 @@ const title = group.media === '電話'
   ? `${titleSpoof}${method}詐欺電話の内容と見分け方`
   : `${titleSpoof}${method}詐欺${group.media}の文面と見分け方`;
 const mediaLabel = group.media === 'SNS' ? 'SNSのメッセージ' : group.media;
-const spoofPhrase = spoofLabel ? `${spoofLabel}を装った` : '';
+const spoofPhrase = override.spoof ?? (spoofLabel ? `${spoofLabel}を装った` : '');
 // 本文冒頭の導入文と説明文(検索結果に出る文)で引用する文:最新の文面の1行目(メールなら件名)。届いたものと見比べられるようにする
 // 伏せ字([メールアドレス]、CL=*** など)は除き、1行目が短いときは2行目もつなげる
 const lines = group.cases[0].body
@@ -35,7 +35,7 @@ const lines = group.cases[0].body
 const head = [...([...(lines[0] ?? '')].length < 12 ? lines.slice(0, 2).join(' ') : lines[0])];
 const quote = head.length > 30 ? `${head.slice(0, 30).join('')}…` : head.join('');
 const arrive = group.media === '電話' ? 'という' : 'と届く';
-const description = `「${quote}」${arrive}${override.spoof ?? spoofPhrase}詐欺${group.media}の実例${group.total}件(最新:${formatDate(group.latest)})。${method && `「${group.method}」の`}見分け方と、URLを開いてしまったときの対処法を掲載。`;
+const description = `「${quote}」${arrive}${spoofPhrase}詐欺${group.media}の実例${group.total}件(最新:${formatDate(group.latest)})。${method && `「${group.method}」の`}見分け方と、URLを開いてしまったときの対処法を掲載。`;
 // ほかの事例:同じなりすまし先 → 同じ手口 → そのほか、の順で5件まで
 // それぞれ、新しい順の並びでこのページの次から選ぶ(一巡したら先頭に戻る)。新しいページにリンクが偏らないようにするため
 const all = await getGroups();
