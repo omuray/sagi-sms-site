@@ -1,24 +1,36 @@
 ---
 import { getGroups } from '../lib/sheet';
 const groups = await getGroups();
-// 直近30日の件数で並べる。30日以内の事例がなければ、これまでの件数で並べる
+// 直近30日の件数が多い順に5件まで。5件に満たないときは、残りをこれまでの件数が多い順で埋める
+// (30日以内の事例が1〜2件しかない時期に、全ページからのリンクがそのページだけに集まらないようにするため)
 const since = Date.now() - 30 * 24 * 60 * 60 * 1000;
 const recent = groups
   .map((g) => ({ g, n: g.cases.filter((c) => c.date.getTime() >= since).reduce((s, c) => s + c.count, 0) }))
-  .filter((r) => r.n > 0);
-const isRecent = recent.length > 0;
-const ranking = (isRecent ? recent : groups.map((g) => ({ g, n: g.total })))
+  .filter((r) => r.n > 0)
   .sort((a, b) => b.n - a.n)
   .slice(0, 5);
+const overall = groups
+  .filter((g) => !recent.some((r) => r.g.slug === g.slug))
+  .map((g) => ({ g, n: g.total }))
+  .sort((a, b) => b.n - a.n)
+  .slice(0, 5 - recent.length);
 const spoofs = [...new Set(groups.map((g) => g.spoof))];
 ---
 <aside class="side">
-  <section class="panel">
-    <h2>{isRecent ? '最近30日に多い手口' : '件数の多い手口'}</h2>
-    {ranking.length === 0
-      ? <p class="note">事例はまだありません。</p>
-      : <ol>{ranking.map((r) => <li><a href={`/cases/${r.g.slug}/`}>{r.g.spoof}の{r.g.method}</a>({r.n}件)</li>)}</ol>}
-  </section>
+  {recent.length > 0 && (
+    <section class="panel">
+      <h2>最近30日に多い手口</h2>
+      <ol>{recent.map((r) => <li><a href={`/cases/${r.g.slug}/`}>{r.g.spoof}の{r.g.method}</a>({r.n}件)</li>)}</ol>
+    </section>
+  )}
+  {(overall.length > 0 || recent.length === 0) && (
+    <section class="panel">
+      <h2>{recent.length > 0 ? 'これまでに多い手口' : '件数の多い手口'}</h2>
+      {overall.length === 0
+        ? <p class="note">事例はまだありません。</p>
+        : <ol>{overall.map((r) => <li><a href={`/cases/${r.g.slug}/`}>{r.g.spoof}の{r.g.method}</a>({r.n}件)</li>)}</ol>}
+    </section>
+  )}
   <section class="panel">
     <h2>なりすまし先から探す</h2>
     <div class="chips">
