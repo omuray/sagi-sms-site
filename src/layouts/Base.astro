@@ -31,7 +31,9 @@ const canonical = Astro.url.pathname.startsWith('/404') ? null : new URL(Astro.u
   {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d).replace(/</g, '\\u003c')} />)}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet" />
+  <!-- Webフォントは見出し用の Noto Serif JP だけ。本文は端末のフォント(src/styles/global.css の --sans)。表示を止めないよう後から読み込む -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet" /></noscript>
 </head>
 <body>
   <header class="site-header">

@@ -9,7 +9,7 @@
   --alert: #B4471F;
   --link: #1F5C6B;
   --serif: "Noto Serif JP", "Hiragino Mincho ProN", serif;
-  --sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, sans-serif;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.8; }
