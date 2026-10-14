@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import { getGroups, formatDate, type CaseGroup } from '../../lib/sheet';
 import { METHOD_SHORT, SPOOF_DISPLAY, TITLE_OVERRIDES } from '../../lib/slugs';
+import { getRelated } from '../../lib/related';
 
 export async function getStaticPaths() {
   const groups = await getGroups();
@@ -36,16 +37,8 @@ const head = [...([...(lines[0] ?? '')].length < 12 ? lines.slice(0, 2).join(' '
 const quote = head.length > 30 ? `${head.slice(0, 30).join('')}…` : head.join('');
 const arrive = group.media === '電話' ? 'という' : 'と届く';
 const description = `「${quote}」${arrive}${spoofPhrase}詐欺${group.media}の実例${group.total}件(最新:${formatDate(group.latest)})。${method && `「${group.method}」の`}見分け方と、URLを開いてしまったときの対処法を掲載。`;
-// ほかの事例:同じなりすまし先 → 同じ手口 → そのほか、の順で5件まで
-// それぞれ、新しい順の並びでこのページの次から選ぶ(一巡したら先頭に戻る)。新しいページにリンクが偏らないようにするため
-const all = await getGroups();
-const at = all.findIndex((g) => g.slug === group.slug);
-const others = [...all.slice(at + 1), ...all.slice(0, at)];
-const related = [
-  ...others.filter((g) => g.spoof === group.spoof),
-  ...others.filter((g) => g.spoof !== group.spoof && g.method === group.method),
-  ...others.filter((g) => g.spoof !== group.spoof && g.method !== group.method),
-].slice(0, 5);
+// ほかの事例:選び方は src/lib/related.ts
+const related = (await getRelated()).get(group.slug) ?? [];
 
 // シートの日付が読めない行があってもビルドを止めない
 const times = group.cases.map((c) => c.date.getTime()).filter((t) => !Number.isNaN(t));
