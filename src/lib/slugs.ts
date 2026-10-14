@@ -127,6 +127,10 @@ export function caseLabel(g: { slug: string; spoof: string; method: string }): s
 // 事例ページを作らない手口(正規の通知など)
 export const EXCLUDED_METHODS = new Set(['正規の通知']);
 
+// フィッシング(偽のサイトに誘導して、ID・パスワードやカード情報、お金をだまし取る)にあたらない手口
+// 事例ページの導入文で「詐欺(フィッシング)です」と書かないものを並べる
+export const NOT_PHISHING_METHODS = new Set(['投資LINE勧誘', '副業・在宅ワーク勧誘', '有名人なりすまし', '架空請求', 'その他']);
+
 export function toSlug(map: Record<string, string>, label: string): string {
   return map[label] ?? 'other';
 }

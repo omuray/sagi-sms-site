@@ -3,7 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import { getGroups, formatDate, type CaseGroup } from '../../lib/sheet';
-import { METHOD_SHORT, SPOOF_DISPLAY, TITLE_OVERRIDES, spoofPhrase, caseLabel, spoofCategory } from '../../lib/slugs';
+import { METHOD_SHORT, SPOOF_DISPLAY, TITLE_OVERRIDES, spoofPhrase, caseLabel, spoofCategory, NOT_PHISHING_METHODS } from '../../lib/slugs';
 import { getRelated } from '../../lib/related';
 
 export async function getStaticPaths() {
@@ -28,6 +28,8 @@ const title = group.media === '電話'
   : `${titleSpoof}${method}詐欺${group.media}の文面と見分け方`;
 const mediaLabel = group.media === 'SNS' ? 'SNSのメッセージ' : group.media;
 const phrase = spoofPhrase(group);
+// 導入文で「詐欺(フィッシング)です」と書くかどうか。電話と、勧誘・架空請求などの手口は書かない
+const phishing = group.media !== '電話' && !NOT_PHISHING_METHODS.has(group.method);
 // 本文冒頭の導入文と説明文(検索結果に出る文)で引用する文:最新の文面の1行目(メールなら件名)。届いたものと見比べられるようにする
 // 伏せ字([メールアドレス]、CL=*** など)は除き、1行目が短いときは2行目もつなげる
 const lines = group.cases[0].body
@@ -91,7 +93,7 @@ const prPixel = 'https://www11.a8.net/0.gif?a8mat=4BEAWV+GGEES2+3A66+626XU';
         <span>確認した件数:{group.total}件</span>
         <span>文面の種類:{group.cases.length}種類</span>
       </div>
-      <p>「{quote}」という{mediaLabel}が届いたら、{phrase}詐欺です。同じ手口の文面をこれまでに{group.total}件確認しています。</p>
+      <p>「{quote}」という{mediaLabel}が届いたら、{phrase}詐欺{phishing && '(フィッシング)'}です。同じ手口の文面をこれまでに{group.total}件確認しています。</p>
       <p class="verdict"><strong>結論:</strong>{guide!.data.summary}</p>
 
       <h2>実際に届いたメッセージ</h2>
