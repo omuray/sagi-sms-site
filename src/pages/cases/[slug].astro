@@ -30,7 +30,15 @@ const opening = [...group.cases[0].body.replace(/\s+/g, ' ').trim()];
 const quote = opening.length > 30 ? `${opening.slice(0, 30).join('')}…` : opening.join('');
 const mediaLabel = group.media === 'SNS' ? 'SNSのメッセージ' : group.media;
 const spoofPhrase = spoofLabel ? `${spoofLabel}を装った` : '';
-const description = `${spoofPhrase}「${group.method}」の詐欺${group.media}を${group.total}件確認(最新の受信:${formatDate(group.latest)})。実際に届いた文面${group.cases.length}種類と見分け方、URLを開いてしまったときの対処法をまとめています。`;
+// 説明文(検索結果に出る文):最新の文面の1行目(メールなら件名)を先頭に置いて、届いたものと見比べられるようにする
+// 伏せ字([メールアドレス]、CL=*** など)は除き、1行目が短いときは2行目もつなげる
+const lines = group.cases[0].body
+  .replace(/\[[^\]\n]*\]|[A-Za-z]+\s*[=:]\s*\*{3}/g, '')
+  .split(/\r?\n/).map((l) => l.replace(/\s+/g, ' ').trim()).filter(Boolean);
+const head = [...([...(lines[0] ?? '')].length < 12 ? lines.slice(0, 2).join(' ') : lines[0])];
+const subject = head.length > 30 ? `${head.slice(0, 30).join('')}…` : head.join('');
+const arrive = group.media === '電話' ? 'という' : 'と届く';
+const description = `「${subject}」${arrive}${override.spoof ?? spoofPhrase}詐欺${group.media}の実例${group.total}件(最新:${formatDate(group.latest)})。${method && `「${group.method}」の`}見分け方と、URLを開いてしまったときの対処法を掲載。`;
 // ほかの事例:同じなりすまし先 → 同じ手口 → そのほか、の順で5件まで
 // それぞれ、新しい順の並びでこのページの次から選ぶ(一巡したら先頭に戻る)。新しいページにリンクが偏らないようにするため
 const all = await getGroups();
