@@ -31,6 +31,13 @@ export const PR_SECURITY: PrProduct[] = [
     url: 'https://px.a8.net/svt/ejp?a8mat=1U3BGN+30YFKI+1A8Q+15U4OI',
     pixel: 'https://www11.a8.net/0.gif?a8mat=1U3BGN+30YFKI+1A8Q+15U4OI',
   },
+  {
+    name: 'Surfshark Antivirus',
+    text: 'VPNサービスで知られる Surfshark のセキュリティソフトで、VPN などとセットになったプランで提供されています。VPN の「CleanWeb」という機能で、危険なサイトや広告をブロックできます。使える端末と機能はプランによって違います。',
+    button: '公式サイトを見る',
+    url: 'https://px.a8.net/svt/ejp?a8mat=4BGCF8+1CTNGY+4LSW+BX3J6',
+    pixel: 'https://www11.a8.net/0.gif?a8mat=4BGCF8+1CTNGY+4LSW+BX3J6',
+  },
 ];
 
 // 表示する製品(url が空のものを除く)
