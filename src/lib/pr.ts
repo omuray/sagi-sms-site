@@ -24,6 +24,13 @@ export const PR_SECURITY: PrProduct[] = [
     url: 'https://px.a8.net/svt/ejp?a8mat=4BGCF8+1X2E1E+3IBI+60OXE',
     pixel: 'https://www14.a8.net/0.gif?a8mat=4BGCF8+1X2E1E+3IBI+60OXE',
   },
+  {
+    name: 'ESET HOME セキュリティ',
+    text: 'ESET社のセキュリティソフトで、日本ではキヤノンマーケティングジャパンが販売しています。危険なウェブサイトをブロックする機能があり、Windows・Mac・Android・iPhone で使えます。使える機能は端末によって違います。',
+    button: '公式サイトを見る',
+    url: 'https://px.a8.net/svt/ejp?a8mat=1U3BGN+30YFKI+1A8Q+15U4OI',
+    pixel: 'https://www11.a8.net/0.gif?a8mat=1U3BGN+30YFKI+1A8Q+15U4OI',
+  },
 ];
 
 // 表示する製品(url が空のものを除く)
