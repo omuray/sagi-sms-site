@@ -1,13 +1,17 @@
 ---
 // セキュリティソフトのPR枠(事例ページと、セキュリティアプリの選び方のページで使う)
 // 広告のリンクは src/lib/pr.ts
-import { PR_SECURITY } from '../lib/pr';
+import { prProducts } from '../lib/pr';
 ---
-{PR_SECURITY.url && (
+{prProducts.length > 0 && (
   <div class="panel pr" style="margin-top:16px">
     <p style="margin:0 0 12px"><span class="pr-label">PR</span><strong>さらに強化したい方へ</strong></p>
-    <p style="margin:0 0 12px"><strong>ウイルスバスター クラウド</strong>:トレンドマイクロのセキュリティソフトです。危険なウェブサイトへのアクセスをブロックする機能があり、詐欺メッセージのURLを誤って開いてしまったときの備えになります。パソコンとスマホの両方で使えます。</p>
-    <a class="btn" href={PR_SECURITY.url} target="_blank" rel="sponsored nofollow noopener">公式オンラインショップを見る</a>
-    <img src={PR_SECURITY.pixel} width="1" height="1" alt="" loading="lazy" style="border:0;position:absolute" />
+    {prProducts.map((p, i) => (
+      <div style={i > 0 ? 'margin-top:20px' : undefined}>
+        <p style="margin:0 0 12px"><strong>{p.name}</strong>:{p.text}</p>
+        <a class="btn" href={p.url} target="_blank" rel="sponsored nofollow noopener">{p.button}</a>
+        <img src={p.pixel} width="1" height="1" alt="" loading="lazy" style="border:0;position:absolute" />
+      </div>
+    ))}
   </div>
 )}

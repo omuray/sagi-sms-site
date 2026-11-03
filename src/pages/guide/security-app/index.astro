@@ -3,7 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import Sidebar from '../../../components/Sidebar.astro';
 import PrSecurity from '../../../components/PrSecurity.astro';
 import { breadcrumb } from '../../../lib/jsonld';
-import { PR_SECURITY } from '../../../lib/pr';
+import { prProducts } from '../../../lib/pr';
 // 無料の対策を先に、セキュリティアプリは「もう一段の備え」として紹介する
 // 製品の紹介(PR枠)は本文と分けて最後に置く。広告のリンクは src/lib/pr.ts
 ---
@@ -45,7 +45,7 @@ import { PR_SECURITY } from '../../../lib/pr';
         </ul>
       </div>
 
-      {PR_SECURITY.url && (
+      {prProducts.length > 0 && (
         <>
           <h2>紹介している製品</h2>
           <PrSecurity />
