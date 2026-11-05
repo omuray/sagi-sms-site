@@ -53,6 +53,11 @@ const WARNINGS = [
     label: '8桁以上の数字',
     pattern: /(?<![\w*\/.=-])\d{8,}(?![\d*])/g,
   },
+  {
+    // 英数字だけの1行(受信者ごとの識別用の文字列の可能性がある)
+    label: '英数字だけの行',
+    pattern: /^[ \t]*(?=[A-Za-z0-9]*[A-Za-z])(?=[A-Za-z0-9]*\d)[A-Za-z0-9]{8,32}[ \t]*$/gm,
+  },
 ];
 
 // ページ(.html)と、本文を含むサイト内検索の索引(search-index.json)を調べる
@@ -66,9 +71,11 @@ async function htmlFiles(dir) {
   return out;
 }
 
+// 段落・行の区切り(</div> や <br> など)は改行にして、画面の行と同じ単位で「英数字だけの行」を調べられるようにする
 function pageText(html) {
   return html
     .replace(/<(script|style)[\s\S]*?<\/\1>/g, ' ')
+    .replace(/<\/(?:div|p|li|h[1-6]|tr|td|th)>|<br\s*\/?>/gi, '\n')
     .replace(/<[^>]+>/g, ' ');
 }
 
