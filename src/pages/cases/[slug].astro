@@ -32,10 +32,10 @@ const phrase = spoofPhrase(group);
 // 導入文で「詐欺(フィッシング)です」と書くかどうか。電話と、勧誘・架空請求などの手口は書かない
 const phishing = group.media !== '電話' && !NOT_PHISHING_METHODS.has(group.method);
 // 本文冒頭の導入文と説明文(検索結果に出る文)で引用する文:最新の文面の1行目(メールなら件名)。届いたものと見比べられるようにする
-// 伏せ字([メールアドレス]、CL=*** など)は除き、1行目が短いときは2行目もつなげる
+// 伏せ字([メールアドレス]、CL=*** など)と、< > だけの行(<楽天サポート> などの見出し)は除き、1行目が短いときは2行目もつなげる
 const lines = group.cases[0].body
   .replace(/\[[^\]\n]*\]|[A-Za-z]+\s*[=:]\s*\*{3}/g, '')
-  .split(/\r?\n/).map((l) => l.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  .split(/\r?\n/).map((l) => l.replace(/\s+/g, ' ').trim()).filter((l) => l && !/^<[^<>]*>$/.test(l));
 const head = [...([...(lines[0] ?? '')].length < 12 ? lines.slice(0, 2).join(' ') : lines[0])];
 const quote = head.length > 30 ? `${head.slice(0, 30).join('')}…` : head.join('');
 const arrive = group.media === '電話' ? 'という' : 'と届く';

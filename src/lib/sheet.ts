@@ -77,13 +77,23 @@ const APP_ID = /((?<![A-Za-z])(?:LINE|Line|Telegram|テレグラム|WhatsApp|Sig
 // 3つ目は区切りなしの日本の国際表記(例:819012345678、+819012345678)
 const PHONE = /(?:\+\d{1,3}[\s\-‑]?)?\(?0?\d{1,4}\)?[\s\-‑]\d{2,4}[\s\-‑]\d{3,4}(?!\d)|(?<!\d)0\d{9,10}(?!\d)|(?<![\d+])\+?81\d{9,10}(?!\d)/g;
 
+// 本文に混入したHTMLタグ(メールからコピーしたときに入るもの)
+// タグ名を決めておき、<荷物配達のお知らせ> のような < > で囲まれた件名は消さずに残す
+const HTML_TAG_NAMES = [
+  'a', 'abbr', 'b', 'big', 'blockquote', 'body', 'br', 'button', 'center', 'code', 'col', 'colgroup', 'dd', 'div', 'dl', 'dt',
+  'em', 'font', 'footer', 'form', 'h[1-6]', 'head', 'header', 'hr', 'html', 'i', 'img', 'input', 'label', 'li', 'link', 'main',
+  'meta', 'nav', 'o:p', 'ol', 'p', 'pre', 's', 'script', 'section', 'small', 'span', 'strike', 'strong', 'style', 'sub', 'sup',
+  'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'title', 'tr', 'tt', 'u', 'ul',
+];
+const HTML_TAG = new RegExp(`<\\s*\\/?\\s*(?:${HTML_TAG_NAMES.join('|')})(?=[\\s/>])[^<>]*>|<!--[\\s\\S]*?-->|<![A-Za-z][^<>]*>`, 'gi');
+
 // 公開用に本文を整える(URLの無害化より先に実行する)
 export function sanitize(text: string): string {
   return text
     // 見えない文字(フィルタ回避用に挟まれているもの)を除去
     .replace(/[\u200B-\u200F\u2060-\u2064\uFEFF\u034F]/g, '')
     // HTMLタグ・CSSの記述・装飾記号の混入を除去
-    .replace(/<[^>]+>/g, ' ')
+    .replace(HTML_TAG, ' ')
     .replace(/\/\*[\s\S]*?\*\//g, ' ')
     .replace(/(?:[#.@\w-][\w\s,.#:>*()-]*)?\{[^{}]*[:;][^{}]*\}/g, ' ')
     .replace(/(?:[#.@\w-][\w\s,.#:>*()-]*)?\{[^{}]*[:;][^{}]*\}/g, ' ')
