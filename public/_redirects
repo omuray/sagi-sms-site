@@ -8,3 +8,8 @@
 /cases/other-other/ /cases/u-next-free-trial/ 301
 /cases/other-points/ /cases/yodobashi-points/ 301
 /cases/other-prize/ /cases/eplus-prize/ 301
+
+# 2026-11:シートで「不明(サービス名なし)」になっていた事例のなりすまし先を直し、専用のページに分けた
+# (unknown-payment は、サービス名のない事例が残るのでリダイレクトしない)
+/cases/unknown-points/ /cases/ucs-card-points/ 301
+/cases/unknown-verify/ /cases/vandle-card-verify/ 301

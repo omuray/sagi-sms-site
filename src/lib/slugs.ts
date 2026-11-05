@@ -24,6 +24,10 @@ export const SPOOF_SLUGS: Record<string, string> = {
   'エポスカード': 'epos',
   'PayPayカード': 'paypay-card',
   'アメリカン・エキスプレス': 'amex',
+  'UCSカード': 'ucs-card',
+  // 後払い・プリペイド
+  'Paidy': 'paidy',
+  'バンドルカード': 'vandle-card',
   // 銀行・証券・保険
   '三井住友銀行': 'smbc',
   '海外の銀行(BNI)': 'bni',
