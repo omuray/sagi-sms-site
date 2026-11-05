@@ -44,6 +44,7 @@ export const SPOOF_SLUGS: Record<string, string> = {
   // 公共料金・行政
   '東京ガス': 'tokyo-gas',
   '東京電力': 'tepco',
+  'NHK': 'nhk',
   '国税庁': 'nta',
   '自治体(国民健康保険)': 'health-insurance',
   // 配送

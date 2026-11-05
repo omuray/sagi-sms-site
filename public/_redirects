@@ -13,3 +13,6 @@
 # (unknown-payment は、サービス名のない事例が残るのでリダイレクトしない)
 /cases/unknown-points/ /cases/ucs-card-points/ 301
 /cases/unknown-verify/ /cases/vandle-card-verify/ 301
+
+# 2026-11:シートで「不明(有料サイト)」になっていた NHK の事例のなりすまし先を直し、専用のページに分けた
+/cases/paid-site-payment/ /cases/nhk-payment/ 301
