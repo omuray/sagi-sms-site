@@ -1,0 +1,10 @@
+# 移転したページのリダイレクト(Cloudflare Pages の設定ファイル)
+# Cloudflare Pages では、移転元にページがあってもリダイレクトが優先される。移転元の URL に新しいページを作るときは、その行を消す
+# (ビルドの最後に integrations/redirect-check.mjs が、移転元と同じ URL のページができていないか調べる)
+
+# 2026-11:なりすまし先を slugs.ts に登録し、other-〇〇 にまとめられていたページを分けた
+/cases/other-payment/ /cases/netflix-payment/ 301
+/cases/other-account-lock/ /cases/mercari-account-lock/ 301
+/cases/other-other/ /cases/u-next-free-trial/ 301
+/cases/other-points/ /cases/yodobashi-points/ 301
+/cases/other-prize/ /cases/eplus-prize/ 301

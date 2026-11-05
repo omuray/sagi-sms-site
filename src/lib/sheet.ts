@@ -156,7 +156,17 @@ export async function getCases(): Promise<Case[]> {
       count: Number(r[COL.count]) || 1,
     }))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
+  warnUnmapped(cache);
   return cache;
+}
+
+// slugs.ts の対応表にない、なりすまし先・手口をビルドのログに出す(ビルドは続ける)
+// 未登録のものは "other" になり、ほかの未登録のものと同じページにまとめられてしまう
+function warnUnmapped(cases: Case[]) {
+  const spoofs = new Set(cases.map((c) => c.spoof).filter((s) => !(s in SPOOF_SLUGS)));
+  const methods = new Set(cases.map((c) => c.method).filter((m) => !(m in METHOD_SLUGS)));
+  if (spoofs.size > 0) console.warn(`[slug-check] src/lib/slugs.ts の SPOOF_SLUGS にないなりすまし先:${[...spoofs].join('、')}`);
+  if (methods.size > 0) console.warn(`[slug-check] src/lib/slugs.ts の METHOD_SLUGS にない手口:${[...methods].join('、')}`);
 }
 
 let deadLinkCache: Promise<Set<string>> | null = null;

@@ -1,5 +1,5 @@
 // スプレッドシートのプルダウンの選択肢 → URL用の英字名
-// 選択肢を増やしたら、ここにも1行追加する(未登録のものは "other" になる)
+// 選択肢を増やしたら、ここにも1行追加する(未登録のものは "other" になり、ほかの未登録のものと同じページにまとめられる。ビルドのログに警告が出る)
 export const SPOOF_SLUGS: Record<string, string> = {
   // 通販・IT
   'Amazon': 'amazon',
@@ -7,6 +7,12 @@ export const SPOOF_SLUGS: Record<string, string> = {
   'Nintendo': 'nintendo',
   '楽天': 'rakuten',
   'WhatsApp': 'whatsapp',
+  'Mercari': 'mercari',
+  'ヨドバシカメラ': 'yodobashi',
+  // 動画配信・チケット
+  'Netflix': 'netflix',
+  'U-NEXT': 'u-next',
+  'イープラス': 'eplus',
   // クレジットカード
   'Visa': 'visa',
   'Mastercard': 'mastercard',
@@ -63,6 +69,7 @@ export const METHOD_SLUGS: Record<string, string> = {
   '有名人なりすまし': 'impersonation',
   '当選・プレゼント': 'prize',
   '架空請求': 'fake-bill',
+  '無料トライアル': 'free-trial',
   'その他': 'other',
 };
 
@@ -75,6 +82,7 @@ export const SPOOF_DISPLAY: Record<string, string> = {
   '有名人(芸能人)': '有名人',
   '求人・副業(企業名かたり)': '求人・副業',
   '自治体(国民健康保険)': '国民健康保険',
+  'Mercari': 'メルカリ',
 };
 
 // 分類としてのなりすまし先の表示名(事例一覧の見出し、パンくず、タグ、なりすまし先から探す など)。未登録のものは選択肢の名前をそのまま使う
@@ -85,6 +93,7 @@ export const SPOOF_CATEGORY: Record<string, string> = {
   '有名人(芸能人)': '有名人',
   '求人・副業(企業名かたり)': '求人・副業',
   '自治体(国民健康保険)': '国民健康保険',
+  'Mercari': 'メルカリ',
 };
 
 export function spoofCategory(spoof: string): string {

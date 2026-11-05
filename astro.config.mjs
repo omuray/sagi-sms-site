@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import maskCheck from './integrations/mask-check.mjs';
+import redirectCheck from './integrations/redirect-check.mjs';
 
 // canonical・sitemap・robots.txt・OGP のURLはここから作られる
 const site = 'https://sagi-sms.com';
@@ -32,5 +33,6 @@ export default defineConfig({
       },
     }),
     maskCheck(),
+    redirectCheck(),
   ],
 });
