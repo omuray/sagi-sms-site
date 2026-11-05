@@ -39,7 +39,7 @@ const lines = group.cases[0].body
 const head = [...([...(lines[0] ?? '')].length < 12 ? lines.slice(0, 2).join(' ') : lines[0])];
 const quote = head.length > 30 ? `${head.slice(0, 30).join('')}…` : head.join('');
 const arrive = group.media === '電話' ? 'という' : 'と届く';
-const description = `「${quote}」${arrive}${phrase}詐欺${group.media}の実例${group.total}件(最新:${formatDate(group.latest)})。${method && `「${group.method}」の`}見分け方と、URLを開いてしまったときの対処法を掲載。`;
+const description = `「${quote}」${arrive}${phrase}詐欺${group.media}の実例${group.total}件(最新:${formatDate(group.latest)})。${method && `「${override.method ?? group.method}」の`}見分け方と、URLを開いてしまったときの対処法を掲載。`;
 // ほかの事例:選び方は src/lib/related.ts
 const related = (await getRelated()).get(group.slug) ?? [];
 

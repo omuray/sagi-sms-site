@@ -118,12 +118,16 @@ export const METHOD_SHORT: Record<string, string> = {
   '当選・プレゼント': '当選',
 };
 
-// ページごとのタイトルの上書き(キーは事例ページの slug)。上の2つの呼び名が内容と合わないページだけ書く
-// spoof はタイトルの先頭に置く言葉、method は手口の短い呼び名(パンくずにも使う)
+// ページごとのタイトルの上書き(キーは事例ページの slug)。上の2つの呼び名が内容と合わないページや、検索される言葉と合わないページだけ書く
+// spoof はタイトルの先頭に置く言葉、method は手口の短い呼び名(パンくずと説明文にも使う)
 export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }> = {
   'dai-ichi-life-tax': { method: '保険料の未納' },
   'health-insurance-tax': { method: '保険料の未納' },
   'job-side-job': { spoof: '企業名をかたる' },
+  // 文面のほとんどがプライム会費の未払いで、「プライム会費」「Prime月額料金」で検索されている
+  'amazon-payment': { method: 'プライム会費の未払い' },
+  // 「ガス料金」「未払い」「いつ止まる」で検索されている
+  'tokyo-gas-payment': { method: 'ガス料金の未払い' },
 };
 
 // 「〇〇を装った」の言い方。事例ページの導入文・説明文と、一覧やリンクの呼び名で使う
