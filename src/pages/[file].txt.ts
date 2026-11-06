@@ -6,6 +6,6 @@ import { adsenseClient } from '../lib/adsense';
 export const getStaticPaths: GetStaticPaths = () => (adsenseClient ? [{ params: { file: 'ads' } }] : []);
 
 export const GET: APIRoute = () =>
-  new Response(`google.com, ${adsenseClient!.replace(/^ca-/, '')}, DIRECT, f08c0c0e09d6e0f1\n`, {
+  new Response(`google.com, ${adsenseClient!.replace(/^ca-/, '')}, DIRECT, f08c47fec0942fa0\n`, {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });
