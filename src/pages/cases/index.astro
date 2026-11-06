@@ -4,7 +4,7 @@ import Sidebar from '../../components/Sidebar.astro';
 import SearchBox from '../../components/SearchBox.astro';
 import { getGroups, formatDate } from '../../lib/sheet';
 import { breadcrumb } from '../../lib/jsonld';
-import { spoofCategory } from '../../lib/slugs';
+import { spoofCategory, METHOD_SHORT } from '../../lib/slugs';
 const groups = await getGroups();
 const bySpoof = new Map<string, typeof groups>();
 for (const g of groups) bySpoof.set(g.spoof, [...(bySpoof.get(g.spoof) ?? []), g]);
@@ -13,7 +13,15 @@ const top = [...bySpoof]
   .sort((a, b) => b.total - a.total)
   .slice(0, 3)
   .map((s) => spoofCategory(s.spoof));
-const description = `${top.join('・')}など${bySpoof.size}のなりすまし先をかたる詐欺SMS・フィッシングメール${groups.length}種類を、なりすまし先ごとに一覧で確認できます。`;
+// 説明文(検索結果に出る文):代表的ななりすまし先と手口、実例の件数、最新の受信日を入れる
+// 手口は件数の多い順に3つ、検索されやすい短い呼び名(METHOD_SHORT)で書く
+const byMethod = new Map<string, number>();
+for (const g of groups) if (g.method !== 'その他') byMethod.set(g.method, (byMethod.get(g.method) ?? 0) + g.total);
+const topMethods = [...byMethod].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([m]) => METHOD_SHORT[m] ?? m);
+const totalCases = groups.reduce((n, g) => n + g.total, 0);
+// groups は最新の受信日の新しい順
+const latest = groups[0] ? `(最新:${formatDate(groups[0].latest)})` : '';
+const description = `${top.join('・')}など${bySpoof.size}のなりすまし先をかたる詐欺SMS・フィッシングメールの実例${totalCases}件を一覧で掲載${latest}。${topMethods.join('・')}などの手口ごとに、届いた文面と見分け方を探せます。`;
 ---
 <Base title="詐欺事例一覧" description={description} jsonLd={[breadcrumb(Astro.site!, [['ホーム', '/'], ['詐欺事例', '/cases/']])]}>
   <div class="crumb"><a href="/">ホーム</a> › 詐欺事例</div>
