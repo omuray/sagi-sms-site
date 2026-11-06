@@ -36,8 +36,34 @@ const phishing = group.media !== '電話' && !NOT_PHISHING_METHODS.has(group.met
 const lines = group.cases[0].body
   .replace(/\[[^\]\n]*\]|[A-Za-z]+\s*[=:]\s*\*{3}/g, '')
   .split(/\r?\n/).map((l) => l.replace(/\s+/g, ' ').trim()).filter((l) => l && !/^<[^<>]*>$/.test(l));
-const head = [...([...(lines[0] ?? '')].length < 12 ? lines.slice(0, 2).join(' ') : lines[0])];
-const quote = head.length > 30 ? `${head.slice(0, 30).join('')}…` : head.join('');
+// 私用領域の文字(Apple のロゴ U+F8FF など)は多くの端末で空白や□になるので外す
+const head = ([...(lines[0] ?? '')].length < 12 ? lines.slice(0, 2).join(' ') : lines[0])
+  .replace(/[-]/g, '').replace(/\s+/g, ' ').trim();
+const quote = clipQuote(head);
+
+// 引用文を言葉の途中で切らずに縮める(「〜確認のお願…」のような切れ方を防ぐ)
+// 1. 36字以内なら全文 2. 18〜30字目の区切り(句読点・閉じ括弧・空白など)の一番後ろで切る
+// 3. 区切りがない(またはそれより手前にしかなく短くなりすぎる)ときは日本語の単語の切れ目で切る
+function clipQuote(text: string, max = 30, min = 18, whole = 36): string {
+  const chars = [...text];
+  if (chars.length <= whole) return text;
+  let cut = 0;
+  for (let i = min; i <= max; i++) {
+    const prev = chars[i - 1], next = chars[i];
+    if (/[。！？!?」』）)】、：:｜|]/.test(prev) || /[\s｜|【「（(-]/.test(next)) cut = i;
+  }
+  if (!cut) {
+    // 文字の位置(code point)で数えるため、単語の切れ目も文字数に直して比べる
+    let pos = 0;
+    for (const { segment } of new Intl.Segmenter('ja', { granularity: 'word' }).segment(text)) {
+      const len = [...segment].length;
+      if (pos + len > max) break;
+      pos += len;
+    }
+    cut = pos >= min ? pos : max;
+  }
+  return `${chars.slice(0, cut).join('').replace(/[\s、・｜|:：\-]+$/, '')}…`;
+}
 const arrive = group.media === '電話' ? 'という' : 'と届く';
 const description = `「${quote}」${arrive}${phrase}詐欺${group.media}の実例${group.total}件(最新:${formatDate(group.latest)})。${method && `「${override.method ?? group.method}」の`}見分け方と、URLを開いてしまったときの対処法を掲載。`;
 // ほかの事例:選び方は src/lib/related.ts
