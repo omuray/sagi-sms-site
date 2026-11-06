@@ -6,6 +6,7 @@ import PrSecurity from '../../components/PrSecurity.astro';
 import { getGroups, formatDate, type CaseGroup } from '../../lib/sheet';
 import { TITLE_OVERRIDES, caseTitleParts, spoofPhrase, caseLabel, spoofCategory, NOT_PHISHING_METHODS } from '../../lib/slugs';
 import { getRelated } from '../../lib/related';
+import { quoteHead } from '../../lib/quotes';
 
 export async function getStaticPaths() {
   const groups = await getGroups();
@@ -24,15 +25,9 @@ const mediaLabel = group.media === 'SNS' ? 'SNSのメッセージ' : group.media
 const phrase = spoofPhrase(group);
 // 導入文で「詐欺(フィッシング)です」と書くかどうか。電話と、勧誘・架空請求などの手口は書かない
 const phishing = group.media !== '電話' && !NOT_PHISHING_METHODS.has(group.method);
-// 本文冒頭の導入文と説明文(検索結果に出る文)で引用する文:最新の文面の1行目(メールなら件名)。届いたものと見比べられるようにする
-// 伏せ字([メールアドレス]、CL=*** など)と、< > だけの行(<楽天サポート> などの見出し)は除き、1行目が短いときは2行目もつなげる
-const lines = group.cases[0].body
-  .replace(/\[[^\]\n]*\]|[A-Za-z]+\s*[=:]\s*\*{3}/g, '')
-  .split(/\r?\n/).map((l) => l.replace(/\s+/g, ' ').trim()).filter((l) => l && !/^<[^<>]*>$/.test(l));
-// 私用領域の文字(Apple のロゴ U+F8FF など)は多くの端末で空白や□になるので外す
-const head = ([...(lines[0] ?? '')].length < 12 ? lines.slice(0, 2).join(' ') : lines[0])
-  .replace(/[-]/g, '').replace(/\s+/g, ' ').trim();
-const quote = clipQuote(head);
+// 本文冒頭の導入文と説明文(検索結果に出る文)で引用する文:ふだんは最新の文面の1行目(メールなら件名)。届いたものと見比べられるようにする
+// ページごとに別の事例の1行目を選ぶときは src/lib/quotes.ts の QUOTE_PICKS に書く
+const quote = clipQuote(quoteHead(group));
 
 // 引用文を言葉の途中で切らずに縮める(「〜確認のお願…」のような切れ方を防ぐ)
 // 1. 36字以内なら全文 2. 18〜30字目の区切り(句読点・閉じ括弧・空白など)の一番後ろで切る
