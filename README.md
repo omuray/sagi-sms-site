@@ -115,3 +115,12 @@ APIエラーなどで失敗した行はD列が空のまま残り、K列にエラ
 | `src/lib/search.ts` | 検索の照合。似た文面とみなす基準(SIMILAR_MIN など)を変えるときはここ |
 | `src/styles/global.css` | デザイン |
 | `astro.config.mjs` | サイトのURL(site)。ドメインを変えたらここを書き換える(現在は https://sagi-sms.com) |
+
+## Google AdSense
+
+1. AdSense の管理画面でパブリッシャーID(`ca-pub-` で始まる番号)を確認する
+2. Cloudflare Pages の環境変数に `PUBLIC_ADSENSE_CLIENT` を追加し、IDを入れて再デプロイする(PCで試すときは `.env` に書く)
+3. 設定すると、全ページの `<head>` に AdSense のタグと確認用の meta タグが入り、`/ads.txt` が出力される(`src/lib/adsense.ts`、`src/pages/[file].txt.ts`)
+4. 未設定のときは、タグも ads.txt も出さない(中身が空の ads.txt は広告が配信されなくなるため作らない)
+
+広告の配置は AdSense の管理画面(自動広告)で決める。事例ページの「結論」や実際の文面のすぐ近く、PR枠の隣には出さないよう、除外エリアや広告の量を調整する。

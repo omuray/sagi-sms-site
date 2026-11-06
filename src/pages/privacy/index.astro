@@ -3,8 +3,9 @@ import Base from '../../layouts/Base.astro';
 import { breadcrumb } from '../../lib/jsonld';
 // 内容を変えたら日付も更新する
 const enacted = '2026年10月3日';
+const revised = '2026年11月7日';
 ---
-<Base title="プライバシーポリシー" description="詐欺SMS実録ノートが取得する情報(お問い合わせの内容、アクセス情報)とその利用目的、利用している外部サービス(Cloudflare Pages、Google Fonts、Googleフォーム)、広告とCookieの取り扱いについて説明しています。" jsonLd={[breadcrumb(Astro.site!, [['ホーム', '/'], ['プライバシーポリシー', '/privacy/']])]}>
+<Base title="プライバシーポリシー" description="詐欺SMS実録ノートが取得する情報(お問い合わせの内容、アクセス情報)とその利用目的、利用している外部サービス(Cloudflare Pages、Google Fonts、Googleフォーム、Google AdSense、A8.net)、広告とCookieの取り扱いについて説明しています。" jsonLd={[breadcrumb(Astro.site!, [['ホーム', '/'], ['プライバシーポリシー', '/privacy/']])]}>
   <div class="crumb"><a href="/">ホーム</a> › プライバシーポリシー</div>
   <div class="article">
     <h1>プライバシーポリシー</h1>
@@ -31,11 +32,22 @@ const enacted = '2026年10月3日';
       <li><strong>Cloudflare Pages</strong>(サイトの配信):<a href="https://www.cloudflare.com/ja-jp/privacypolicy/" target="_blank" rel="noopener">Cloudflareのプライバシーポリシー</a></li>
       <li><strong>Google Fonts</strong>(文字の表示):<a href="https://policies.google.com/privacy?hl=ja" target="_blank" rel="noopener">Googleのプライバシーポリシー</a></li>
       <li><strong>Googleフォーム</strong>(お問い合わせ):同上</li>
+      <li><strong>Google AdSense</strong>(広告の配信):同上</li>
+      <li><strong>A8.net</strong>(アフィリエイト広告):<a href="https://www.fancs.com/privacy/" target="_blank" rel="noopener">株式会社ファンコミュニケーションズの個人情報保護方針</a></li>
     </ul>
 
     <h2>広告について</h2>
-    <p>当サイトはアフィリエイトプログラムに参加し、広告を掲載しています。広告のリンクを経由して商品やサービスを申し込んだかどうかを確認するため、広告の配信事業者がCookieを使用することがあります。Cookieで氏名やメールアドレスなど、個人を直接特定する情報は取得されません。</p>
-    <p>Cookieは、ブラウザの設定で無効にできます。</p>
+    <h3>Google AdSense</h3>
+    <p>当サイトは、第三者配信の広告サービス「Google AdSense」を利用しています。Googleなどの第三者配信事業者は、Cookieを使用して、利用者が当サイトや他のウェブサイトに過去にアクセスした際の情報に基づいて広告を配信します。</p>
+    <p>Googleが広告Cookieを使用することにより、Googleやそのパートナーは、当サイトや他のサイトへのアクセス情報に基づいて、利用者に適切な広告を表示できます。</p>
+    <p>利用者は、<a href="https://adssettings.google.com/" target="_blank" rel="noopener">Googleの広告設定</a>で、パーソナライズ広告を無効にできます。また、<a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener">www.aboutads.info</a>にアクセスすれば、パーソナライズ広告に使われる第三者配信事業者のCookieを無効にできます。</p>
+    <p>Googleによる情報の取り扱いについては、<a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener">Googleの広告に関するポリシー</a>をご覧ください。</p>
+
+    <h3>アフィリエイト広告</h3>
+    <p>当サイトはアフィリエイトプログラム(A8.net)に参加し、広告を掲載しています。広告のリンクを経由して商品やサービスを申し込んだかどうかを確認するため、広告の配信事業者がCookieを使用することがあります。</p>
+
+    <h3>Cookieについて</h3>
+    <p>広告のCookieで、氏名やメールアドレスなど、個人を直接特定する情報は取得されません。Cookieは、ブラウザの設定で無効にできます。</p>
 
     <h2>掲載している事例について</h2>
     <p>当サイトに掲載しているメッセージは、運営者が実際に受信したものです。掲載にあたっては、電話番号とメールアドレスを伏せ、URLは無害化しています。送信元の番号やアドレスは掲載していません。</p>
@@ -47,6 +59,6 @@ const enacted = '2026年10月3日';
     <h2>このポリシーの変更</h2>
     <p>このポリシーは、必要に応じて予告なく変更することがあります。変更後の内容は、このページに掲載した時点から適用します。</p>
 
-    <p class="note">制定日:{enacted}<br />詐欺SMS実録ノート編集部</p>
+    <p class="note">制定日:{enacted}<br />最終改定日:{revised}<br />詐欺SMS実録ノート編集部</p>
   </div>
 </Base>

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { adsenseClient } from '../lib/adsense';
 // jsonLd: ページごとの構造化データ(schema.org)。配列で複数渡せる
 // titleSuffix: false で <title> の末尾にサイト名を付けない(検索結果で切れやすい長いタイトルの事例ページ用。サイト名は og:site_name と構造化データで伝わる)
 // ogImage / ogImageAlt: ページごとのOGP画像のパスと代替テキスト(事例ページ用)。省くとサイト共通の /og.png
@@ -36,6 +37,9 @@ const canonical = Astro.url.pathname.startsWith('/404') ? null : new URL(Astro.u
   <!-- Webフォントは見出し用の Noto Serif JP だけ。本文は端末のフォント(src/styles/global.css の --sans)。表示を止めないよう後から読み込む -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet" /></noscript>
+  <!-- Google AdSense(PUBLIC_ADSENSE_CLIENT が設定されているときだけ。src/lib/adsense.ts) -->
+  {adsenseClient && <meta name="google-adsense-account" content={adsenseClient} />}
+  {adsenseClient && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`} crossorigin="anonymous"></script>}
 </head>
 <body>
   <header class="site-header">
@@ -54,7 +58,7 @@ const canonical = Astro.url.pathname.startsWith('/404') ? null : new URL(Astro.u
   <div class="wrap"><slot /></div>
   <footer class="site-footer">
     <div class="inner">
-      <div>当サイトは広告(アフィリエイト)を含みます。</div>
+      <div>当サイトは広告(アフィリエイト広告・Google AdSense)を含みます。</div>
       <div><a href="/about/">運営者情報</a><a href="/privacy/">プライバシーポリシー</a><a href="/disclaimer/">免責事項</a></div>
     </div>
   </footer>
