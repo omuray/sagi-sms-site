@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import PrSecurity from '../../components/PrSecurity.astro';
 import { getGroups, formatDate, type CaseGroup } from '../../lib/sheet';
-import { METHOD_SHORT, SPOOF_DISPLAY, TITLE_OVERRIDES, spoofPhrase, caseLabel, spoofCategory, NOT_PHISHING_METHODS } from '../../lib/slugs';
+import { TITLE_OVERRIDES, caseTitleParts, spoofPhrase, caseLabel, spoofCategory, NOT_PHISHING_METHODS } from '../../lib/slugs';
 import { getRelated } from '../../lib/related';
 
 export async function getStaticPaths() {
@@ -15,18 +15,11 @@ export async function getStaticPaths() {
 const { group } = Astro.props as { group: CaseGroup };
 const guide = (await getEntry('guides', group.slug)) ?? (await getEntry('guides', 'default'));
 const { Content } = await render(guide!);
-// 例:Amazon「支払い情報の更新」詐欺メールの文面と見分け方
-// なりすまし先は表示名を使い、手口の名前に含まれる場合(有名人「有名人なりすまし」など)は省く
-// 呼び名が内容と合わないページは TITLE_OVERRIDES で上書きする
+// タイトルの組み立て方は src/lib/slugs.ts の caseTitleParts(OGP画像と共通)
 const override = TITLE_OVERRIDES[group.slug] ?? {};
-const methodShort = override.method ?? METHOD_SHORT[group.method] ?? group.method;
-const method = group.method === 'その他' ? '' : `「${methodShort}」`;
-const spoofName = SPOOF_DISPLAY[group.spoof] ?? group.spoof;
-const spoofLabel = spoofName && !group.method.includes(spoofName) ? spoofName : '';
-const titleSpoof = override.spoof ?? spoofLabel;
-const title = group.media === '電話'
-  ? `${titleSpoof}${method}詐欺電話の内容と見分け方`
-  : `${titleSpoof}${method}詐欺${group.media}の文面と見分け方`;
+const { spoof: titleSpoof, method, methodShort, title } = caseTitleParts(group);
+// ページごとのOGP画像(src/pages/og/cases/[slug].png.ts が作る)
+const ogImage = `/og/cases/${group.slug}.png`;
 const mediaLabel = group.media === 'SNS' ? 'SNSのメッセージ' : group.media;
 const phrase = spoofPhrase(group);
 // 導入文で「詐欺(フィッシング)です」と書くかどうか。電話と、勧誘・架空請求などの手口は書かない
@@ -98,13 +91,13 @@ const jsonLd = [
     mainEntityOfPage: pageUrl,
     datePublished: times.length ? new Date(Math.min(...times)).toISOString() : undefined,
     dateModified: times.length ? new Date(Math.max(...times)).toISOString() : undefined,
-    image: new URL('/og.png', site).href,
+    image: new URL(ogImage, site).href,
     author: { '@type': 'Organization', name: '詐欺SMS実録ノート', url: new URL('/about/', site).href },
     publisher: { '@type': 'Organization', name: '詐欺SMS実録ノート', url: new URL('/', site).href },
   },
 ];
 ---
-<Base title={title} description={description} ogType="article" jsonLd={jsonLd} titleSuffix={false}>
+<Base title={title} description={description} ogType="article" jsonLd={jsonLd} titleSuffix={false} ogImage={ogImage} ogImageAlt={title}>
   <div class="crumb"><a href="/">ホーム</a> › <a href="/cases/">詐欺事例</a> › <a href={spoofAnchor}>{category}</a> › {methodShort}</div>
   <div class="layout">
     <article class="article">

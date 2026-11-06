@@ -96,6 +96,12 @@ APIエラーなどで失敗した行はD列が空のまま残り、K列にエラ
 - 照合は閲覧者のブラウザの中だけで行い、入力した内容は外部に送らない
 - URL・電話番号・メールアドレスは掲載時に書き換えているため、照合のときは入力と掲載文面の両方から取り除く
 
+## OGP画像
+
+- 事例ページは、ビルドのたびに `src/pages/og/cases/[slug].png.ts` がページごとの画像(`/og/cases/〇〇.png`)を作る。なりすまし先と手口はページのタイトルと同じもの(`src/lib/slugs.ts` の `caseTitleParts`)
+- それ以外のページはサイト共通の `public/og.png`(`scripts/make-og-image.py` で作り直せる)
+- 画像の文字は `fonts/` の Noto Serif JP / Noto Sans JP(太字、JIS第1・第2水準のみ。SIL Open Font License、`fonts/OFL.txt`)。フォントにない文字がタイトルに入るとビルドで `[og-image]` の警告が出るので、`scripts/make-og-fonts.py` の文字の一覧に足してフォントを作り直す
+
 ## よく触るファイル
 
 | ファイル | 内容 |

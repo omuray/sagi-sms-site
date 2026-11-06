@@ -105,6 +105,21 @@ export function spoofCategory(spoof: string): string {
   return SPOOF_CATEGORY[spoof] ?? spoof;
 }
 
+// 事例ページのタイトルの部品。ページ(src/pages/cases/[slug].astro)とOGP画像(src/pages/og/cases/[slug].png.ts)で同じものを使う
+// 例:Amazon「支払い情報の更新」詐欺メールの文面と見分け方 → spoof: Amazon / method: 「支払い情報の更新」 / tail: 詐欺メールの文面と見分け方
+// なりすまし先は表示名を使い、手口の名前に含まれる場合(有名人「有名人なりすまし」など)は省く
+// 呼び名が内容と合わないページは TITLE_OVERRIDES で上書きする
+export function caseTitleParts(g: { slug: string; spoof: string; method: string; media: string }) {
+  const override = TITLE_OVERRIDES[g.slug] ?? {};
+  const methodShort = override.method ?? METHOD_SHORT[g.method] ?? g.method;
+  const method = g.method === 'その他' ? '' : `「${methodShort}」`;
+  const spoofName = SPOOF_DISPLAY[g.spoof] ?? g.spoof;
+  const spoofLabel = spoofName && !g.method.includes(spoofName) ? spoofName : '';
+  const spoof = override.spoof ?? spoofLabel;
+  const tail = g.media === '電話' ? '詐欺電話の内容と見分け方' : `詐欺${g.media}の文面と見分け方`;
+  return { spoof, method, methodShort, tail, title: `${spoof}${method}${tail}` };
+}
+
 // ページのタイトル用の短い呼び名(検索されやすい言い方)。未登録の手口は選択肢の名前をそのまま使う
 export const METHOD_SHORT: Record<string, string> = {
   '料金未払い・支払い情報の更新': '支払い情報の更新',
