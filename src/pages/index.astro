@@ -9,7 +9,8 @@ const groups = await getGroups();
 const latest = groups.slice(0, 10);
 const description = `実際に届いた詐欺SMS・フィッシングメール${groups.length}種類の文面を、なりすまし先と手口ごとに掲載。「このメッセージは本物?」と迷ったときに同じ文面を探せ、見分け方と対処法も確認できます。`;
 ---
-<Base title="実際に届いた詐欺SMS・フィッシングメールの事例と対策" description={description} jsonLd={[website(Astro.site!, description)]}>
+<!-- トップの title はサイト名を先に置く(サイト名で検索されることが多いため)。サイト名に「詐欺SMS」が入るので、続きには重ねて書かない -->
+<Base title="詐欺SMS実録ノート | フィッシングメールの実例と見分け方" titleSuffix={false} description={description} jsonLd={[website(Astro.site!, description)]}>
   <div class="layout">
     <div class="article">
       <h1>実際に届いた詐欺SMS・フィッシングメールの事例と対策</h1>
