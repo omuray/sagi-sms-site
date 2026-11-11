@@ -16,3 +16,6 @@
 
 # 2026-11:シートで「不明(有料サイト)」になっていた NHK の事例のなりすまし先を直し、専用のページに分けた
 /cases/paid-site-payment/ /cases/nhk-payment/ 301
+
+# 2026-11:シートで「三井住友銀行」になっていた三井住友カードの事例のなりすまし先を直し、専用のページに分けた
+/cases/smbc-fraud-alert/ /cases/smbc-card-fraud-alert/ 301
