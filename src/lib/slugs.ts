@@ -25,6 +25,7 @@ export const SPOOF_SLUGS: Record<string, string> = {
   'PayPayカード': 'paypay-card',
   'アメリカン・エキスプレス': 'amex',
   'UCSカード': 'ucs-card',
+  'タカシマヤカード': 'takashimaya-card',
   // 後払い・プリペイド
   'Paidy': 'paidy',
   'バンドルカード': 'vandle-card',
