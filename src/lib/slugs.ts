@@ -145,6 +145,13 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'amazon-payment': { method: 'プライム会費の未払い' },
   // 「ガス料金」「未払い」「いつ止まる」で検索されている
   'tokyo-gas-payment': { method: 'ガス料金の未払い' },
+  // 手口は「限度額引き上げ・カード優待」だが、文面は限度額の引き下げや見直しで、「引き上げ」と合わない
+  // (amex-upgrade は増額、saison-upgrade は引き上げとアップグレードの文面なので上書きしない)
+  'aeon-card-upgrade': { method: '利用限度額の変更' },
+  'epos-upgrade': { method: '利用限度額の変更' },
+  'jcb-upgrade': { method: '利用限度額の変更' },
+  'rakuten-card-upgrade': { method: '利用限度額の変更' },
+  'takashimaya-card-upgrade': { method: '利用限度額の変更' },
 };
 
 // 「〇〇を装った」の言い方。事例ページの導入文・説明文と、一覧やリンクの呼び名で使う
