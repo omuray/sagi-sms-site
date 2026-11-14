@@ -86,7 +86,7 @@ export const METHOD_SLUGS: Record<string, string> = {
 // 空文字のものは、タイトルなどで「〇〇を装った」を書かない
 export const SPOOF_DISPLAY: Record<string, string> = {
   '不明(有料サイト)': '有料サイト',
-  '不明(クレジットカード)': 'クレジットカード',
+  '不明(クレジットカード)': 'クレジットカード会社',
   '不明(サービス名なし)': '',
   'その他': '',
   '有名人(芸能人)': '有名人',
