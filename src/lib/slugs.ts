@@ -58,6 +58,7 @@ export const SPOOF_SLUGS: Record<string, string> = {
   '有名人(芸能人)': 'celebrity',
   '求人・副業(企業名かたり)': 'job',
   '不明(有料サイト)': 'paid-site',
+  '不明(クレジットカード)': 'unknown-card',
   '不明(サービス名なし)': 'unknown',
   'その他': 'other',
 };
@@ -77,6 +78,7 @@ export const METHOD_SLUGS: Record<string, string> = {
   '当選・プレゼント': 'prize',
   '架空請求': 'fake-bill',
   '無料トライアル': 'free-trial',
+  '与信承認': 'credit-auth',
   'その他': 'other',
 };
 
@@ -84,6 +86,7 @@ export const METHOD_SLUGS: Record<string, string> = {
 // 空文字のものは、タイトルなどで「〇〇を装った」を書かない
 export const SPOOF_DISPLAY: Record<string, string> = {
   '不明(有料サイト)': '有料サイト',
+  '不明(クレジットカード)': 'クレジットカード',
   '不明(サービス名なし)': '',
   'その他': '',
   '有名人(芸能人)': '有名人',
@@ -96,6 +99,7 @@ export const SPOOF_DISPLAY: Record<string, string> = {
 // 事例一覧の見出しの id(/cases/#〇〇 のリンク先)は選択肢の名前のままにする
 export const SPOOF_CATEGORY: Record<string, string> = {
   '不明(有料サイト)': '有料サイト',
+  '不明(クレジットカード)': 'クレジットカード(会社名なし)',
   '不明(サービス名なし)': 'サービス名なし',
   '有名人(芸能人)': '有名人',
   '求人・副業(企業名かたり)': '求人・副業',
@@ -133,6 +137,8 @@ export const METHOD_SHORT: Record<string, string> = {
   '税金・保険料の未納': '税金の未納',
   '副業・在宅ワーク勧誘': '副業勧誘',
   '当選・プレゼント': '当選',
+  // 「与信承認」だけでは何の知らせかわからない。文面は与信承認のエラーを理由にカードの再登録を求めるもの
+  '与信承認': '与信承認エラー',
 };
 
 // ページごとのタイトルの上書き(キーは事例ページの slug)。上の2つの呼び名が内容と合わないページや、検索される言葉と合わないページだけ書く
