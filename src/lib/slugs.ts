@@ -163,13 +163,16 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'rakuten-card-payment': { method: 'ご入金・お支払いが確認できません' },
   // 件名のほとんどが「Visaカード登録情報の確認をお願いいたします」の言い換えで、どれも「Visaカード」を名乗っている
   'visa-verify': { method: '登録情報の確認' },
+  // 件名はどれも「カード利用内容(状況)の確認」で、身に覚えのない利用を見せて確認させるもの
+  'jcb-fraud-alert': { method: 'カード利用内容の確認' },
   // 「メンバーシップ料金(を決済できませんでした)」と「お支払い情報(方法)を更新してください」の両方で検索されている
   'netflix-payment': { method: 'メンバーシップ料金の決済失敗・支払い方法の更新' },
   // 手口は「限度額引き上げ・カード優待」だが、文面は限度額の引き下げや見直しで、「引き上げ」と合わない
   // (amex-upgrade は増額、saison-upgrade は引き上げとアップグレードの文面なので上書きしない)
   'aeon-card-upgrade': { method: '利用限度額の変更' },
   'epos-upgrade': { method: '利用限度額の変更' },
-  'jcb-upgrade': { method: '利用限度額の変更' },
+  // 件名が「ご利用可能枠の改定(減額)」で、「jcb ご利用可能額 メール」で検索されている
+  'jcb-upgrade': { method: 'ご利用可能枠の改定(減額)' },
   'rakuten-card-upgrade': { method: '利用限度額の変更' },
   'takashimaya-card-upgrade': { method: '利用限度額の変更' },
 };
