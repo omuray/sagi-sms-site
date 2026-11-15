@@ -151,6 +151,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'amazon-payment': { method: 'プライム会費の未払い' },
   // 「ガス料金」「未払い」「いつ止まる」で検索されている
   'tokyo-gas-payment': { method: 'ガス料金の未払い' },
+  // 「メンバーシップ料金(を決済できませんでした)」と「お支払い情報(方法)を更新してください」の両方で検索されている
+  'netflix-payment': { method: 'メンバーシップ料金の決済失敗・支払い方法の更新' },
   // 手口は「限度額引き上げ・カード優待」だが、文面は限度額の引き下げや見直しで、「引き上げ」と合わない
   // (amex-upgrade は増額、saison-upgrade は引き上げとアップグレードの文面なので上書きしない)
   'aeon-card-upgrade': { method: '利用限度額の変更' },

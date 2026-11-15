@@ -7,6 +7,8 @@ export const OFFICIAL_LINKS: Record<string, string> = {
   'Apple': 'https://support.apple.com/ja-jp/102568',
   'Nintendo': 'https://support.nintendo.com/jp/information/2024/1029.html',
   '楽天': 'https://corp.rakuten.co.jp/security/anti-fraud/',
+  // Netflix はヘルプセンターの「フィッシングまたはNetflixを名乗る疑わしいメールやテキストメッセージ」(2026年11月に確認)
+  'Netflix': 'https://help.netflix.com/ja/node/65674',
   'WhatsApp': 'https://faq.whatsapp.com/2286952358121083/?locale=ja_JP',
   // クレジットカード
   'Visa': 'https://www.visa.co.jp/pay-with-visa/security/fraud-email.html',
