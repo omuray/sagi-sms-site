@@ -42,6 +42,8 @@ export const OFFICIAL_LINKS: Record<string, string> = {
   '東京電力': 'https://www.tepco.co.jp/ep/archive/20240315.html',
   '国税庁': 'https://www.nta.go.jp/information/attention/attention.htm',
   // 配送
+  // ヤマト運輸は「ヤマト運輸の名前を装った迷惑メールが多発しています」(2025年8月26日更新、2026年11月に確認)
+  'ヤマト運輸': 'https://www.yamato-hd.co.jp/important/info_181212.html',
   '日本郵便': 'https://www.post.japanpost.jp/notification/notice/fraud-mail.html',
   // その他
   // 宝くじは、宝くじ公式サイトのトップからリンクされている、みずほ銀行のページ
