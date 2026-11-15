@@ -3,6 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import PrSecurity from '../../components/PrSecurity.astro';
+import { SHOW_PR_ON_CASES } from '../../lib/pr';
 import { getGroups, formatDate, type CaseGroup } from '../../lib/sheet';
 import { TITLE_OVERRIDES, caseTitleParts, spoofPhrase, caseLabel, spoofCategory, NOT_PHISHING_METHODS } from '../../lib/slugs';
 import { getRelated } from '../../lib/related';
@@ -139,7 +140,7 @@ const jsonLd = [
         <strong>まずは無料で:携帯キャリアの迷惑SMSフィルタをオンにする</strong>
         <p style="margin:6px 0 0;color:var(--body)">各キャリアの無料の拒否設定で、詐欺SMSの多くを受信前に止められます。</p>
       </div>
-      <PrSecurity limit={1} />
+      {SHOW_PR_ON_CASES && <PrSecurity limit={1} />}
       <p>無料の設定とセキュリティアプリでできること・できないこと、選ぶときの確認点は<a href="/guide/security-app/">セキュリティアプリの選び方</a>にまとめています。</p>
 
       {related.length > 0 && (

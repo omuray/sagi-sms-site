@@ -2,10 +2,13 @@
 import Base from '../layouts/Base.astro';
 import Sidebar from '../components/Sidebar.astro';
 import SearchBox from '../components/SearchBox.astro';
-import { getGroups, formatDate } from '../lib/sheet';
+import { getCases, getGroups, formatDate } from '../lib/sheet';
+import { buildTrends, pct } from '../lib/trends';
 import { caseLabel } from '../lib/slugs';
 import { website } from '../lib/jsonld';
-const groups = await getGroups();
+const [cases, groups] = await Promise.all([getCases(), getGroups()]);
+const t = buildTrends(cases, groups);
+const s3 = t.links[0];
 const latest = groups.slice(0, 10);
 const description = `実際に届いた詐欺SMS・フィッシングメール${groups.length}種類の文面を、なりすまし先と手口ごとに掲載。「このメッセージは本物?」と迷ったときに同じ文面を探せ、見分け方と対処法も確認できます。`;
 ---
@@ -22,6 +25,17 @@ const description = `実際に届いた詐欺SMS・フィッシングメール${
         {latest.map((g) => <li><a href={`/cases/${g.slug}/`}><span class="t">{caseLabel(g)}</span><br /><span class="note">{g.media}/最新の受信:{formatDate(g.latest)}/{g.total}件</span></a></li>)}
       </ul>
       <p><a href="/cases/">すべての事例を見る</a></p>
+
+      <h2>このサイトでわかること</h2>
+      <ul>
+        <li><strong>実際に届いた文面</strong>:運営者に届いた{t.total}件(文面{t.variants}種類)を、なりすまし先と手口ごとに{groups.length}ページに分けて、届いたままの文面で掲載しています。URLはリンクにならない形にし、電話番号などは伏せています。</li>
+        <li><strong>その手口ならではの見分け方</strong>:ページごとに、文面のどこがおかしいのかを、なりすまされた企業の公式の案内と照らし合わせて解説しています。「本物はメールで手続きを求めない」といった、各社が実際に案内している内容を根拠にしています。</li>
+        <li><strong>開いてしまったときの対処</strong>:何も入力していない、パスワードを入力した、カード番号を入力したなど、状況ごとにすぐやることをまとめています。</li>
+      </ul>
+
+      <h2>届いた事例からわかること</h2>
+      <p>多い手口は「{t.methods[0].label}」({pct(t.methods[0].n, t.total)}%)で、{t.spoofs[0].label}を名乗るものが最も多く届いています。{t.withUrl > 0 && s3.n > 0 && `リンク先を確認できた文面の${pct(s3.n, t.withUrl)}%は、企業の公式サイトではなく Amazon のクラウドストレージ(amazonaws.com)のアドレスでした。`}期限を区切って急がせる文面は{pct(t.pressure, t.variants)}%にのぼります。</p>
+      <p><a href="/trends/">データで見る詐欺SMS・フィッシングメールの傾向</a>では、手口・なりすまし先・誘導先のURL・月ごとの件数を、毎日更新のデータで確認できます。</p>
     </div>
     <Sidebar />
   </div>

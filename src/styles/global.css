@@ -86,3 +86,14 @@ h1, h2, h3 { font-family: var(--serif); line-height: 1.45; }
 .site-footer { background: var(--ink); color: var(--line); font-size: 13px; }
 .site-footer .inner { max-width: 1120px; margin: 0 auto; padding: 32px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
 .site-footer a { color: var(--line); margin-right: 20px; }
+
+/* データで見る傾向(/trends/)の、棒つきの表。棒は件数の目安で、数字は右に文字で出す */
+.bars { width: 100%; border-collapse: collapse; margin: 16px 0 24px; background: var(--card); border-radius: 12px; overflow: hidden; }
+.bars caption { text-align: left; font-weight: 700; padding: 0 0 8px; }
+.bars thead th { font-size: 12px; color: var(--sub); font-weight: 400; text-align: left; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.bars tbody th { text-align: left; font-weight: 400; padding: 10px 16px; width: 45%; vertical-align: top; }
+.bars tbody td { padding: 10px 16px 10px 0; vertical-align: top; }
+.bars tbody tr + tr > * { border-top: 1px solid var(--tint); }
+.bars .bar { display: inline-block; height: 12px; min-width: 2px; max-width: calc(100% - 7em); background: var(--link); border-radius: 0 4px 4px 0; vertical-align: middle; margin-right: 8px; }
+.bars .v { font-size: 14px; white-space: nowrap; vertical-align: middle; }
+@media (max-width: 600px) { .bars tbody th { width: 50%; padding: 10px 12px; } .bars thead th { padding: 10px 12px; } }

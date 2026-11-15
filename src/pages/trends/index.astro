@@ -1,0 +1,110 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import { getCases, getGroups, formatDate } from '../../lib/sheet';
+import { buildTrends, pct, type Row } from '../../lib/trends';
+import { caseLabel } from '../../lib/slugs';
+import { breadcrumb } from '../../lib/jsonld';
+
+// 公開している事例をビルドのたびに集計し直す。文章の数字もすべて集計から入れる
+const [cases, groups] = await Promise.all([getCases(), getGroups()]);
+const t = buildTrends(cases, groups);
+const topMethod = t.methods[0];
+const topSpoof = t.spoofs[0];
+const mail = t.media.find((m) => m.label === 'メール')?.n ?? 0;
+const s3 = t.links[0];
+const peak = t.months.reduce((a, m) => (m.n > a.n ? m : a), t.months[0]);
+const description = `当サイトに実際に届いた詐欺SMS・フィッシングメール${t.total}件(${formatDate(t.first)}〜${formatDate(t.last)})を集計。多い手口となりすまし先、誘導先のURLの特徴、急がせる言葉の使われ方を、毎日更新のデータでまとめています。`;
+// 最も多い手口の説明(手口が入れ替わったときに文が合わなくならないよう、手口ごとに書く)
+const METHOD_NOTE: Record<string, string> = {
+  '料金未払い・支払い情報の更新': '支払いができなかった、情報の更新が必要だと伝えて、カード番号やログイン情報を入力させる手口です。',
+  '不在通知・配達確認': '荷物を届けられなかったと伝えて、再配達の手続きを装った偽サイトに誘導する手口です。',
+};
+// 誘導先で最も多い種類が Amazon S3 のときだけ、見出しと説明でそう言い切る
+const s3Top = s3.n > 0 && t.links.every((k) => k.n <= s3.n) && s3.n >= t.otherLinks;
+const bar = (rows: Row[]) => Math.max(...rows.map((r) => r.n), 1);
+---
+<Base title="データで見る詐欺SMS・フィッシングメールの傾向" description={description} jsonLd={[breadcrumb(Astro.site!, [['ホーム', '/'], ['データで見る傾向', '/trends/']])]}>
+  <div class="crumb"><a href="/">ホーム</a> › データで見る傾向</div>
+  <div class="layout">
+    <div class="article">
+      <h1>データで見る詐欺SMS・フィッシングメールの傾向</h1>
+      <p class="meta"><span>集計の対象:{formatDate(t.first)}〜{formatDate(t.last)}に届いた{t.total}件(文面{t.variants}種類)</span><span>毎日更新</span></p>
+      <p>このページの数字は、当サイトの運営者の手元に実際に届いた詐欺SMS・フィッシングメールを、すべて数え直したものです。新しいメッセージが届くたびに自動で更新されます。1人の受信者に届いたものだけを数えているため、世の中全体の割合とは違うことがありますが、「いま、どんな文面が、どこへ誘導してくるのか」を実物から確かめられます。</p>
+
+      <h2>いちばん多いのは「{topMethod.label}」</h2>
+      <p>{t.total}件のうち{topMethod.n}件({pct(topMethod.n, t.total)}%)が「{topMethod.label}」でした。{METHOD_NOTE[topMethod.label] ?? ''}なりすまされる先は{topSpoof.label}が{topSpoof.n}件で最も多く、身近で利用者の多いサービスほど狙われています。</p>
+      <table class="bars">
+        <caption>手口別の件数</caption>
+        <thead><tr><th scope="col">手口</th><th scope="col">件数</th></tr></thead>
+        <tbody>
+          {t.methods.map((r) => (
+            <tr><th scope="row">{r.label}</th><td><span class="bar" style={`width:${(r.n / bar(t.methods)) * 100}%`}></span><span class="v">{r.n}件</span></td></tr>
+          ))}
+        </tbody>
+      </table>
+
+      <table class="bars">
+        <caption>なりすまし先の件数(上位10)</caption>
+        <thead><tr><th scope="col">なりすまし先</th><th scope="col">件数</th></tr></thead>
+        <tbody>
+          {t.spoofs.slice(0, 10).map((r) => (
+            <tr><th scope="row"><a href={r.href}>{r.label}</a></th><td><span class="bar" style={`width:${(r.n / bar(t.spoofs)) * 100}%`}></span><span class="v">{r.n}件</span></td></tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2>{s3Top ? `誘導先のURLは${pct(s3.n, t.withUrl)}%が Amazon S3` : '誘導先のURLの特徴'}</h2>
+      {s3Top && <p>文面からURLを確認できた{t.withUrl}種類のうち、{s3.n}種類({pct(s3.n, t.withUrl)}%)が「〇〇.amazonaws.com」で始まる Amazon S3 のアドレスでした。なりすまし先が Amazon でなくても、カード会社や配送業者を名乗るメールのリンクが、同じように Amazon のクラウドストレージを指しています。</p>}
+      <p>本物の企業がお知らせのリンクにクラウドストレージのアドレスを使うことは、まずありません。<strong>「amazonaws.com」や意味の読めない「.cn」のドメインが入ったURLは、詐欺を強く疑ってください。</strong>ただし、URLが本物そっくりでも安全とは限らないので、リンクは開かず、公式アプリかブックマークから確かめるのが基本です。</p>
+      <table class="bars">
+        <caption>誘導先のURLの種類(URLを確認できた{t.withUrl}種類の文面のうち)</caption>
+        <thead><tr><th scope="col">種類</th><th scope="col">文面の数</th></tr></thead>
+        <tbody>
+          {t.links.filter((r) => r.n > 0).map((r) => (
+            <tr><th scope="row">{r.label}<br /><span class="note">{r.note}</span></th><td><span class="bar" style={`width:${pct(r.n, t.withUrl)}%`}></span><span class="v">{r.n}({pct(r.n, t.withUrl)}%)</span></td></tr>
+          ))}
+          {t.otherLinks > 0 && <tr><th scope="row">そのほか</th><td><span class="bar" style={`width:${pct(t.otherLinks, t.withUrl)}%`}></span><span class="v">{t.otherLinks}({pct(t.otherLinks, t.withUrl)}%)</span></td></tr>}
+        </tbody>
+      </table>
+
+      <h2>{pct(t.pressure, t.variants)}%が期限を区切って急がせる</h2>
+      <p>文面{t.variants}種類のうち、{t.pressure}種類({pct(t.pressure, t.variants)}%)が「期限」「本日中」「〇日以内」などで手続きを急がせ、{t.threat}種類({pct(t.threat, t.variants)}%)が「停止」「制限」「失効」などで不利益をちらつかせていました。両方を組み合わせたものは{t.both}種類({pct(t.both, t.variants)}%)です。</p>
+      <p>期限と不利益を並べるのは、確かめる時間を与えずにリンクを押させるための典型的な書き方です。期限が届いた当日や翌日になっている文面も少なくありません。急がされたときほど、いったん手を止めて、公式アプリで自分の契約やお知らせを確認してください。</p>
+
+      <h2>{mail === t.total ? 'すべてメール' : `${pct(mail, t.total)}%がメール`}</h2>
+      <p>当サイトに届いたものは、{t.media.map((m) => `${m.label}${m.n}件`).join('、')}でした。サイト名に「SMS」とありますが、運営者の手元ではメールのほうがはるかに多く届いています。メールもSMSも、見分け方と対処法は同じです。</p>
+
+      <h2>月ごとの件数</h2>
+      <p>受信した月ごとの件数です。{peak.label}が{peak.n}件で最も多くなっています。</p>
+      <table class="bars">
+        <caption>月ごとの件数(直近12か月)</caption>
+        <thead><tr><th scope="col">月</th><th scope="col">件数</th></tr></thead>
+        <tbody>
+          {t.months.map((r) => (
+            <tr><th scope="row">{r.label}</th><td><span class="bar" style={`width:${(r.n / bar(t.months)) * 100}%`}></span><span class="v">{r.n}件</span></td></tr>
+          ))}
+        </tbody>
+      </table>
+
+      {t.fresh.length > 0 && (
+        <>
+          <h2>この30日に初めて届いた手口</h2>
+          <p>{formatDate(t.last)}までの30日間に、当サイトで初めて確認したなりすまし先と手口の組み合わせです。新しい文面は、まだほかのサイトに情報が少ないことがあります。</p>
+          <ul>
+            {t.fresh.map((g) => <li><a href={`/cases/${g.slug}/`}>{caseLabel(g)}</a>({formatDate(g.cases[g.cases.length - 1].date)}に初めて受信)</li>)}
+          </ul>
+        </>
+      )}
+
+      <h2>集計の方法</h2>
+      <ul>
+        <li>件数は受信した回数です。同じ文面が2回届いたものは2件と数えます。URLと言葉の集計は、文面の種類ごとに数えています。</li>
+        <li>企業からの正規の通知と確認できたものは、集計に含めていません。</li>
+        <li>URLは、文面に書かれていたものを、リンクにならない形にして記録しています。URLのない文面(電話をかけさせる・LINEに誘導するなど)や、リンク先を確認できなかった文面は、URLの集計に含めていません。</li>
+        <li>なりすまし先・手口ごとの実際の文面と見分け方は、<a href="/cases/">詐欺事例の一覧</a>から確認できます。共通する見分け方と相談窓口は<a href="/guide/">対策ガイド</a>にまとめています。</li>
+      </ul>
+    </div>
+    <Sidebar />
+  </div>
+</Base>
