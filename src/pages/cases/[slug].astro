@@ -122,7 +122,11 @@ const jsonLd = [
         <div class="note">※URLは誤ってアクセスしないよう無害化して掲載しています。送信元の番号は偽装や乗っ取りの可能性があるため掲載していません。</div>
       </div>
 
+      {/* 解説に書いた報告先などのメールアドレスを、Cloudflare の「メールアドレスの難読化」で /cdn-cgi/l/email-protection へのリンクに書き換えさせない
+          (書き換えると JavaScript のない環境で読めず、Google がそのリンクをたどって 404 として報告する)。email_off で囲んだ範囲は書き換えられない */}
+      <Fragment set:html="<!--email_off-->" />
       <div class="guide"><Content /></div>
+      <Fragment set:html="<!--/email_off-->" />
       <p>ほかの手口にも共通する見分け方や、被害にあったときの相談窓口は<a href="/guide/">対策ガイド</a>にまとめています。</p>
 
       {group.official && (
