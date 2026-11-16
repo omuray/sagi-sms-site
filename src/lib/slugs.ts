@@ -169,6 +169,10 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'saison-fraud-alert': { method: 'ご利用確認のお願い・不正利用の検知' },
   // 件名はどちらも「ご利用制限に関するお知らせ」
   'saison-account-lock': { method: 'ご利用制限のお知らせ' },
+  // 文面の多くが「iCloud+ の月額更新を完了できませんでした」「お支払い方法の確認のお願い」
+  'apple-payment': { method: 'iCloud+の更新・お支払い方法の確認' },
+  // 「アカウントが停止されました apple」「appleidは停止されました」で検索されている
+  'apple-account-lock': { method: 'Apple ID・アカウントの停止' },
   // 「メンバーシップ料金(を決済できませんでした)」と「お支払い情報(方法)を更新してください」の両方で検索されている
   'netflix-payment': { method: 'メンバーシップ料金の決済失敗・支払い方法の更新' },
   // 手口は「限度額引き上げ・カード優待」だが、文面は限度額の引き下げや見直しで、「引き上げ」と合わない
