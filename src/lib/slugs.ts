@@ -177,7 +177,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'netflix-payment': { method: 'メンバーシップ料金の決済失敗・支払い方法の更新' },
   // 手口は「限度額引き上げ・カード優待」だが、文面は限度額の引き下げや見直しで、「引き上げ」と合わない
   // (amex-upgrade は増額、saison-upgrade は引き上げとアップグレードの文面なので上書きしない)
-  'aeon-card-upgrade': { method: '利用限度額の変更' },
+  // イオンカードの文面はどれも引き下げで、「イオンカード限度額引き下げメール」で検索されている
+  'aeon-card-upgrade': { method: '利用限度額の引き下げ' },
   'epos-upgrade': { method: '利用限度額の変更' },
   // 件名が「ご利用可能枠の改定(減額)」で、「jcb ご利用可能額 メール」で検索されている
   'jcb-upgrade': { method: 'ご利用可能枠の改定(減額)' },
