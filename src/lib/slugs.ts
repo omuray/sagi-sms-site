@@ -171,6 +171,12 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'saison-account-lock': { method: 'ご利用制限のお知らせ' },
   // 文面の多くが「iCloud+ の月額更新を完了できませんでした」「お支払い方法の確認のお願い」
   'apple-payment': { method: 'iCloud+の更新・お支払い方法の確認' },
+  // 件名はどれも「楽天ポイント未付与分・未反映分の確認」で、失効ではない
+  'rakuten-points': { method: 'ポイント未付与・未反映' },
+  // 件名は「ログイン検出およびカード利用に関する重要なお知らせ」
+  'rakuten-fraud-alert': { method: 'ログイン検出・カード利用の確認' },
+  // 楽天市場のショップを装い、「お届け先住所の不備のため営業所で保管中」と知らせるもの
+  'rakuten-delivery': { method: 'お届け先住所の不備・営業所保管' },
   // 「アカウントが停止されました apple」「appleidは停止されました」で検索されている
   'apple-account-lock': { method: 'Apple ID・アカウントの停止' },
   // 「メンバーシップ料金(を決済できませんでした)」と「お支払い情報(方法)を更新してください」の両方で検索されている
