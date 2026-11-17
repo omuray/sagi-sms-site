@@ -179,6 +179,10 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'rakuten-delivery': { method: 'お届け先住所の不備・営業所保管' },
   // 件名は「Mastercardセキュリティ認証手続きについてのご案内です」
   'mastercard-verify': { method: 'セキュリティ認証の手続き' },
+  // 件名は「未加算マイルのご確認」「マイル有効期限のお知らせ」「マイル加算手続きのご案内」で、ポイントではなくマイル
+  'ana-points': { method: 'マイル未加算・有効期限' },
+  // 件名は「ANAマイレージクラブご利用制限のお知らせ」
+  'ana-account-lock': { method: 'マイレージクラブのご利用制限' },
   // 「アカウントが停止されました apple」「appleidは停止されました」で検索されている
   'apple-account-lock': { method: 'Apple ID・アカウントの停止' },
   // 「メンバーシップ料金(を決済できませんでした)」と「お支払い情報(方法)を更新してください」の両方で検索されている
