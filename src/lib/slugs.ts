@@ -177,6 +177,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'rakuten-fraud-alert': { method: 'ログイン検出・カード利用の確認' },
   // 楽天市場のショップを装い、「お届け先住所の不備のため営業所で保管中」と知らせるもの
   'rakuten-delivery': { method: 'お届け先住所の不備・営業所保管' },
+  // 件名は「Mastercardセキュリティ認証手続きについてのご案内です」
+  'mastercard-verify': { method: 'セキュリティ認証の手続き' },
   // 「アカウントが停止されました apple」「appleidは停止されました」で検索されている
   'apple-account-lock': { method: 'Apple ID・アカウントの停止' },
   // 「メンバーシップ料金(を決済できませんでした)」と「お支払い情報(方法)を更新してください」の両方で検索されている
