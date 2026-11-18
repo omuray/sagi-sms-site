@@ -213,6 +213,13 @@ export async function getGroups(): Promise<CaseGroup[]> {
     g.total += c.count;
     if (!g.official && c.official) g.official = c.official;
   }
+  // 媒体は、最新の1件ではなくページ全体で決める。複数の媒体が混ざるときは件数の多い順に「SMS・メール」のようにつなぐ
+  // (例:WhatsApp はSMSが5件・メールが1件なのに、最新がメールだったためタイトルが「詐欺メール」になっていた)
+  for (const g of map.values()) {
+    const counts = new Map<string, number>();
+    for (const c of g.cases) counts.set(c.media, (counts.get(c.media) ?? 0) + c.count);
+    g.media = [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([m]) => m).join('・');
+  }
   // 公式注意喚起は、シートの入力 → 対応表(officials.ts)の順で、リンク切れでないものを使う。どちらも切れていれば出さない
   const candidates = new Map([...map.values()].map((g) => [g, [g.official, OFFICIAL_LINKS[g.spoof] ?? ''].filter((u) => u !== '')]));
   const dead = await deadLinks([...candidates.values()].flat());
