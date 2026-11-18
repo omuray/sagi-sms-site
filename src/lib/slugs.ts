@@ -185,6 +185,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'ana-account-lock': { method: 'マイレージクラブのご利用制限' },
   // 件名が「ご利用カードの不正取引を検知しました」
   'epos-fraud-alert': { method: '不正取引の検知' },
+  // 件名は「eオリコカードご利用のお知らせと確認依頼」「ご利用の取引確認とご案内のお知らせ」
+  'orico-fraud-alert': { method: 'ご利用のお知らせと確認依頼' },
   // 「アカウントが停止されました apple」「appleidは停止されました」で検索されている
   'apple-account-lock': { method: 'Apple ID・アカウントの停止' },
   // 「メンバーシップ料金(を決済できませんでした)」と「お支払い情報(方法)を更新してください」の両方で検索されている
