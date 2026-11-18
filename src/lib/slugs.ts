@@ -183,6 +183,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'ana-points': { method: 'マイル未加算・有効期限' },
   // 件名は「ANAマイレージクラブご利用制限のお知らせ」
   'ana-account-lock': { method: 'マイレージクラブのご利用制限' },
+  // 件名が「ご利用カードの不正取引を検知しました」
+  'epos-fraud-alert': { method: '不正取引の検知' },
   // 「アカウントが停止されました apple」「appleidは停止されました」で検索されている
   'apple-account-lock': { method: 'Apple ID・アカウントの停止' },
   // 「メンバーシップ料金(を決済できませんでした)」と「お支払い情報(方法)を更新してください」の両方で検索されている
@@ -191,7 +193,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   // (amex-upgrade は増額、saison-upgrade は引き上げとアップグレードの文面なので上書きしない)
   // イオンカードの文面はどれも引き下げで、「イオンカード限度額引き下げメール」で検索されている
   'aeon-card-upgrade': { method: '利用限度額の引き下げ' },
-  'epos-upgrade': { method: '利用限度額の変更' },
+  // 件名が「ご利用限度額引き下げのお知らせ」
+  'epos-upgrade': { method: '利用限度額の引き下げ' },
   // 件名が「ご利用可能枠の改定(減額)」で、「jcb ご利用可能額 メール」で検索されている
   'jcb-upgrade': { method: 'ご利用可能枠の改定(減額)' },
   'rakuten-card-upgrade': { method: '利用限度額の変更' },
