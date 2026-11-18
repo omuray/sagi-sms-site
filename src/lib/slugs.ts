@@ -193,6 +193,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'amex-points': { method: 'ポイント失効・有効期限' },
   // 件名は「ご利用可能枠増額のご案内」
   'amex-upgrade': { method: 'ご利用可能枠の増額' },
+  // 文面は「宝くじを無料で進呈」。「当選通知」「高額当選 メール」でも検索されている
+  'takarakuji-prize': { method: '当選・無料プレゼント' },
   // 「アカウントが停止されました apple」「appleidは停止されました」で検索されている
   'apple-account-lock': { method: 'Apple ID・アカウントの停止' },
   // 「メンバーシップ料金(を決済できませんでした)」と「お支払い情報(方法)を更新してください」の両方で検索されている
