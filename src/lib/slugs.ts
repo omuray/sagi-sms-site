@@ -189,6 +189,10 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'orico-fraud-alert': { method: 'ご利用のお知らせと確認依頼' },
   // 件名は「【〇月】請求金額 〇〇円のお支払いをお願いします」、本文は「請求予定金額のお知らせ」
   'paypay-card-payment': { method: '請求金額のお支払い' },
+  // 件名は「近々有効期限を迎えるポイント情報」「近日中に失効予定のポイントについて」。「ポイント失効 メール」で検索されている
+  'amex-points': { method: 'ポイント失効・有効期限' },
+  // 件名は「ご利用可能枠増額のご案内」
+  'amex-upgrade': { method: 'ご利用可能枠の増額' },
   // 「アカウントが停止されました apple」「appleidは停止されました」で検索されている
   'apple-account-lock': { method: 'Apple ID・アカウントの停止' },
   // 「メンバーシップ料金(を決済できませんでした)」と「お支払い情報(方法)を更新してください」の両方で検索されている
