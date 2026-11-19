@@ -215,6 +215,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'v-point-points': { method: 'ポイント有効期限間近・失効' },
   // 件名が「JRE POINTの有効期限間近に関するご案内」で、「保有中の jre point 失効に関する重要なお知らせ」で検索されている
   'jre-point-points': { method: 'ポイント有効期限間近・失効' },
+  // 「えきねっと ご本人確認のお願い」「ご本人確認のお願い(アカウント一時ロック)」で検索されている
+  'ekinet-verify': { method: 'ご本人確認のお願い・アカウントロック' },
   'takashimaya-card-upgrade': { method: '利用限度額の変更' },
 };
 
