@@ -219,7 +219,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'ekinet-verify': { method: 'ご本人確認のお願い・アカウントロック' },
   // 件名は「JALマイル有効期限に関するご案内」で、ポイントではなくマイル
   'jal-points': { method: 'マイル有効期限・失効' },
-  'takashimaya-card-upgrade': { method: '利用限度額の変更' },
+  // 件名は「ご利用限度額(利用可能枠)変更のお知らせ」「ご利用可能枠の改定および本人認証のお願い」
+  'takashimaya-card-upgrade': { method: 'ご利用可能枠の改定・本人認証' },
 };
 
 // 「〇〇を装った」の言い方。事例ページの導入文・説明文と、一覧やリンクの呼び名で使う
