@@ -217,6 +217,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'jre-point-points': { method: 'ポイント有効期限間近・失効' },
   // 「えきねっと ご本人確認のお願い」「ご本人確認のお願い(アカウント一時ロック)」で検索されている
   'ekinet-verify': { method: 'ご本人確認のお願い・アカウントロック' },
+  // 件名は「JALマイル有効期限に関するご案内」で、ポイントではなくマイル
+  'jal-points': { method: 'マイル有効期限・失効' },
   'takashimaya-card-upgrade': { method: '利用限度額の変更' },
 };
 
