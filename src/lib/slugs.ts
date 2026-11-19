@@ -207,7 +207,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'epos-upgrade': { method: '利用限度額の引き下げ' },
   // 件名が「ご利用可能枠の改定(減額)」で、「jcb ご利用可能額 メール」で検索されている
   'jcb-upgrade': { method: 'ご利用可能枠の改定(減額)' },
-  'rakuten-card-upgrade': { method: '利用限度額の変更' },
+  // 件名が「【重要】楽天カード ご利用可能枠の引き下げに関するお知らせ」
+  'rakuten-card-upgrade': { method: 'ご利用可能枠の引き下げ' },
   'takashimaya-card-upgrade': { method: '利用限度額の変更' },
 };
 
