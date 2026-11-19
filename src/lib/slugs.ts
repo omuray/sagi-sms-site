@@ -213,6 +213,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'ucs-card-points': { method: '未充当ポイント・ポイント失効' },
   // 件名が「三井Vポイントの有効期限間近のお知らせ」で、「vポイントの有効期限 間近 です」で検索されている
   'v-point-points': { method: 'ポイント有効期限間近・失効' },
+  // 件名が「JRE POINTの有効期限間近に関するご案内」で、「保有中の jre point 失効に関する重要なお知らせ」で検索されている
+  'jre-point-points': { method: 'ポイント有効期限間近・失効' },
   'takashimaya-card-upgrade': { method: '利用限度額の変更' },
 };
 
