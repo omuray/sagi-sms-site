@@ -35,8 +35,8 @@ export const OFFICIAL_LINKS: Record<string, string> = {
   'ANA': 'https://www.ana.co.jp/ja/jp/share/caution_phishing/',
   'JAL': 'https://www.jal.co.jp/jp/ja/footer/phishing/',
   'JRE POINT': 'https://www.jrepoint.jp/information/jrepoint-office/20260512001',
-  // Vポイントは三井住友カードのページ
-  'Vポイント': 'https://www.smbc-card.com/mem/service/sec/phishing01.jsp',
+  // Vポイントは運営会社(V POINT MARKETING)のFAQ「Vポイントを名乗るなりすまし・不審なメールを受け取りました」(2026年11月に確認)
+  'Vポイント': 'https://ssl.help.tsite.jp/faq/show/43960?site_domain=qa-tsite',
   'えきねっと(JR東日本)': 'https://www.eki-net.com/top/oshirase/security/',
   'ETC利用照会サービス': 'https://www.etc-meisai.jp/caution/caution_phishing.html',
   // 公共料金・行政
