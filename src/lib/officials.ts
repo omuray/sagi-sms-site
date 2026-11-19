@@ -22,6 +22,8 @@ export const OFFICIAL_LINKS: Record<string, string> = {
   'PayPayカード': 'https://www.paypay-card.co.jp/service/safe/phishing/',
   'アメリカン・エキスプレス': 'https://www.americanexpress.com/ja-jp/security/phishing/',
   // タカシマヤカードは発行会社(高島屋ファイナンシャル・パートナーズ)の「セキュリティ＆サポート」のページ(2026年11月に確認)
+  // UCSカードは「UCSをかたる不審なメールにご注意ください」(2026年11月に確認)
+  'UCSカード': 'https://www.ucscard.co.jp/info/',
   'タカシマヤカード': 'https://www.takashimaya-fp.co.jp/card/attention/',
   '三井住友カード': 'https://www.smbc-card.com/mem/service/sec/phishing01.jsp',
   // 銀行・証券・保険

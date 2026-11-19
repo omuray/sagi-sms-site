@@ -209,6 +209,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'jcb-upgrade': { method: 'ご利用可能枠の改定(減額)' },
   // 件名が「【重要】楽天カード ご利用可能枠の引き下げに関するお知らせ」
   'rakuten-card-upgrade': { method: 'ご利用可能枠の引き下げ' },
+  // 件名は「未充当ポイントのご案内」
+  'ucs-card-points': { method: '未充当ポイント・ポイント失効' },
   'takashimaya-card-upgrade': { method: '利用限度額の変更' },
 };
 
