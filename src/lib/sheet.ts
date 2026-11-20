@@ -155,7 +155,7 @@ export async function getCases(): Promise<Case[]> {
     header: true,
     skipEmptyLines: true,
   });
-  cache = data
+  const parsed: Case[] = data
     .filter((r) => (r[COL.body] ?? '').trim() !== '' && !EXCLUDED_METHODS.has(r[COL.method] ?? ''))
     .map((r) => ({
       date: parseJst(r[COL.date] ?? ''),
@@ -166,10 +166,38 @@ export async function getCases(): Promise<Case[]> {
       url: r[COL.url] ? defang(maskUrlParams(r[COL.url])) : '',
       official: (r[COL.official] ?? '').trim(),
       count: Number(r[COL.count]) || 1,
-    }))
-    .sort((a, b) => b.date.getTime() - a.date.getTime());
+    }));
+  cache = checkDates(parsed).sort((a, b) => b.date.getTime() - a.date.getTime());
   warnUnmapped(cache);
   return cache;
+}
+
+// タイムスタンプが読めない事例を調べる
+// 日付がないと、並び順・「最新の受信」・サイトマップの更新日がずれる。数件なら警告を出してその事例だけ載せず、
+// 多いとき(公開用シートの式の不具合などでまとめて抜けたとき)はビルドを止めて、公開中のサイトを前のままにする
+// 例:2026-11 に、公開用シートの QUERY が日時と文字の混ざった列の片方を空にし、265行中131行のタイムスタンプが抜けた
+const MAX_BAD_DATES = 3;
+const MAX_BAD_DATE_RATIO = 0.05;
+function checkDates(cases: Case[]): Case[] {
+  const bad = cases.filter((c) => Number.isNaN(c.date.getTime()));
+  if (bad.length === 0) return cases;
+  const list = bad
+    .slice(0, 10)
+    .map((c) => `  - ${c.spoof}/${c.method}:${c.body.replace(/\s+/g, ' ').slice(0, 30)}`)
+    .join('\n');
+  if (bad.length > MAX_BAD_DATES || bad.length > cases.length * MAX_BAD_DATE_RATIO) {
+    throw new Error(
+      `タイムスタンプが読めない事例が ${bad.length} 件(全 ${cases.length} 件中)あるため、ビルドを止めました。\n` +
+        '公開用シートの「タイムスタンプ」列が空になっていないか確かめてください。' +
+        '記録用シートのタイムスタンプに日時と文字が混ざると、QUERY が片方を空にすることがあります' +
+        '(公開用シートの式で A列を TO_TEXT でそろえる。README「1. 公開用シートを作る」を参照)。\n' +
+        list,
+    );
+  }
+  console.warn(
+    `[date-check] タイムスタンプが読めない事例が ${bad.length} 件あるため、載せずにビルドを続けます。シートの「タイムスタンプ」列を確かめてください。\n${list}`,
+  );
+  return cases.filter((c) => !Number.isNaN(c.date.getTime()));
 }
 
 // slugs.ts の対応表にない、なりすまし先・手口をビルドのログに出す(ビルドは続ける)
