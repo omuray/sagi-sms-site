@@ -221,6 +221,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'jal-points': { method: 'マイル有効期限・失効' },
   // 配送業者の名前がなく、件名は「【配送予定のお知らせ】お届け前のご確認をお願いします」
   'unknown-delivery': { method: '配送予定・お届け前の確認' },
+  // 件名そのままの「【セキュリティ警告】決済カードの再登録と一時制限について」で2位に出ているのにクリックがなかった(2026-11)
+  'unknown-card-credit-auth': { method: '決済カードの再登録・与信承認エラー' },
   // 件名は「ご利用限度額(利用可能枠)変更のお知らせ」「ご利用可能枠の改定および本人認証のお願い」
   'takashimaya-card-upgrade': { method: 'ご利用可能枠の改定・本人認証' },
 };
