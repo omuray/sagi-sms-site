@@ -219,6 +219,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'ekinet-verify': { method: 'ご本人確認のお願い・アカウントロック' },
   // 件名は「JALマイル有効期限に関するご案内」で、ポイントではなくマイル
   'jal-points': { method: 'マイル有効期限・失効' },
+  // 配送業者の名前がなく、件名は「【配送予定のお知らせ】お届け前のご確認をお願いします」
+  'unknown-delivery': { method: '配送予定・お届け前の確認' },
   // 件名は「ご利用限度額(利用可能枠)変更のお知らせ」「ご利用可能枠の改定および本人認証のお願い」
   'takashimaya-card-upgrade': { method: 'ご利用可能枠の改定・本人認証' },
 };
