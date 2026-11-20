@@ -41,10 +41,18 @@ export type CaseGroup = {
 // URLをリンクにならない形にする
 // ドメインに装飾文字(ⓦ 𝕪 など)が混ざっていても最後まで無害化する。無害化済み(hxxp)の残りの「.」も直す
 export function defang(text: string): string {
-  return text.replace(/h(?:tt|xx)ps?:\/\/[!-~\p{L}\p{N}\p{S}]+/gu, (u) =>
-    u.replace(/^http/, 'hxxp').replace(/(?<!\[)\.(?!\])/g, '[.]'),
-  );
+  return text
+    .replace(/h(?:tt|xx)ps?:\/\/[!-~\p{L}\p{N}\p{S}]+/gu, (u) =>
+      u.replace(/^http/, 'hxxp').replace(/(?<!\[)\.(?!\])/g, '[.]'),
+    )
+    .replace(BARE_DOMAIN, (d) => d.replace(/\./g, '[.]'));
 }
+
+// 「http(s)://」を付けずにドメインだけを書いたもの(例:68quka.com)も、「.」を「[.]」にして無害化する
+// 本文中の「Amazon.co.jp」のようなサービス名も同じ形になるが、安全側に倒す
+// 上の処理で無害化済みのURL(「[.]」になっている)と、メールアドレス(先に [メールアドレス] に置き換え済み)には当たらない
+const BARE_DOMAIN =
+  /(?<![\w.@\/\[-])(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+(?:com|net|org|info|biz|jp|cn|top|xyz|shop|site|online|store|bond|icu|cc|me|io|co|vip|club|live|app|dev|link|click|work|asia|tokyo|cyou|sbs|buzz|tk|ml|ga|cf|gq|ru|in|us|uk)(?![\w.-]*\w)/gi;
 
 // URLに含まれる受信者固有の値(ログインID・パスワード・メールアドレスを符号化した文字列など)を伏せる
 // 12桁以上の数字(送信ごとに変わる追跡番号の可能性がある)は先頭4桁だけ残す(例:2026**********)
