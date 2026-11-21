@@ -58,13 +58,16 @@ const BARE_DOMAIN =
 // 12桁以上の数字(送信ごとに変わる追跡番号の可能性がある)は先頭4桁だけ残す(例:2026**********)
 // パラメーターの値が6〜11桁の数字だけのもの(例:member=3544103393)は、受信者ごとの番号の可能性があり、端末によっては電話番号のリンクにもなるので *** にする
 // メッセージアプリの友だち追加・招待リンク(line.me/ti/p/〇〇、t.me/〇〇 など)は、ドメインより後ろのアカウント部分を丸ごと伏せる
+// 最後に、「?英数字=英数字」のパラメーター部分は、名前も値もまとめて ?*** にする(例:?rnd=29mn656p → ?***)
+// 送信ごと・受信者ごとに変わる値が入っていることが多く、名前だけ残しても読む人の役に立たないため
 export function maskUrlParams(text: string): string {
   return text
     .replace(INVITE_URL, '$1***')
     .replace(/([?&;](?:id|uid|mid|user|userid|login|pass|pw|passwd|password|email|mail|token|key|code|dst|member|member_?id|mem|customer|customer_?id|cust|cid|account|account_?id|acct)=)[^\s&#]+/gi, '$1***')
     .replace(/([?&;][A-Za-z_][\w-]*=)\d{6,11}(?![\d*])/g, '$1***')
     .replace(/\?[A-Za-z0-9+\/_%-]{20,}={0,2}/g, '?***')
-    .replace(/(?<!\d)(\d{4})(\d{8,})(?!\d)/g, (_, head, rest) => head + '*'.repeat(rest.length));
+    .replace(/(?<!\d)(\d{4})(\d{8,})(?!\d)/g, (_, head, rest) => head + '*'.repeat(rest.length))
+    .replace(/\?[^\s?#]*=[^\s#]*/g, '?***');
 }
 
 // 友だち追加・招待リンクのドメイン。後ろの英数字・記号の部分がアカウントを表す
@@ -109,6 +112,8 @@ export function sanitize(text: string): string {
     .replace(/(?:[#.@\w-][\w\s,.#:>*()-]*)?\{[^{}]*[:;][^{}]*\}/g, ' ')
     .replace(/@media[^{]*\{\s*\}/g, ' ')
     .replace(/\*\*/g, '')
+    // URLが「?」で改行され、次の行に「lw72=awnr」のようなパラメーターが続くときは、1つのURLにつなげてから伏せる
+    .replace(/(h(?:tt|xx)ps?:\/\/[!-~\p{L}\p{N}\p{S}]*\?)[ \t]*\r?\n[ \t]*(?=[\w.%-]+=)/gu, '$1')
     // URLのログインID・パスワードや、メールアドレスを符号化した値を伏せる
     .replace(/h(?:tt|xx)ps?:\/\/[!-~\p{L}\p{N}\p{S}]+/gu, maskUrlParams)
     // メールアドレスを伏せる(URLの一部は対象外)
