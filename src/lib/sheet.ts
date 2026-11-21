@@ -56,11 +56,13 @@ const BARE_DOMAIN =
 
 // URLに含まれる受信者固有の値(ログインID・パスワード・メールアドレスを符号化した文字列など)を伏せる
 // 12桁以上の数字(送信ごとに変わる追跡番号の可能性がある)は先頭4桁だけ残す(例:2026**********)
+// パラメーターの値が6〜11桁の数字だけのもの(例:member=3544103393)は、受信者ごとの番号の可能性があり、端末によっては電話番号のリンクにもなるので *** にする
 // メッセージアプリの友だち追加・招待リンク(line.me/ti/p/〇〇、t.me/〇〇 など)は、ドメインより後ろのアカウント部分を丸ごと伏せる
 export function maskUrlParams(text: string): string {
   return text
     .replace(INVITE_URL, '$1***')
-    .replace(/([?&;](?:id|uid|mid|user|userid|login|pass|pw|passwd|password|email|mail|token|key|code|dst)=)[^\s&#]+/gi, '$1***')
+    .replace(/([?&;](?:id|uid|mid|user|userid|login|pass|pw|passwd|password|email|mail|token|key|code|dst|member|member_?id|mem|customer|customer_?id|cust|cid|account|account_?id|acct)=)[^\s&#]+/gi, '$1***')
+    .replace(/([?&;][A-Za-z_][\w-]*=)\d{6,11}(?![\d*])/g, '$1***')
     .replace(/\?[A-Za-z0-9+\/_%-]{20,}={0,2}/g, '?***')
     .replace(/(?<!\d)(\d{4})(\d{8,})(?!\d)/g, (_, head, rest) => head + '*'.repeat(rest.length));
 }

@@ -15,6 +15,8 @@ const canonical = Astro.url.pathname.startsWith('/404') ? null : new URL(Astro.u
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- 事例の文面に残る数字の並びを、スマートフォンが電話番号のリンクにしないようにする -->
+  <meta name="format-detection" content="telephone=no" />
   <title>{titleSuffix ? `${title} | ${siteName}` : title}</title>
   <meta name="description" content={description} />
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
