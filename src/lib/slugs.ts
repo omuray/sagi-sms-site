@@ -210,6 +210,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'jcb-upgrade': { method: 'ご利用可能枠の改定(減額)' },
   // 件名が「【重要】楽天カード ご利用可能枠の引き下げに関するお知らせ」
   'rakuten-card-upgrade': { method: 'ご利用可能枠の引き下げ' },
+  // 「楽天カード ご本人様確認 メール」「楽天カード 本人確認アプリ メール」で検索されている。届いた件名は「お客様情報のご確認のお願い」
+  'rakuten-card-verify': { method: 'ご本人様確認・お客様情報の確認' },
   // 件名は「未充当ポイントのご案内」
   'ucs-card-points': { method: '未充当ポイント・ポイント失効' },
   // 件名が「三井Vポイントの有効期限間近のお知らせ」で、「vポイントの有効期限 間近 です」で検索されている
