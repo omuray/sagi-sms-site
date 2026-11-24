@@ -7,7 +7,8 @@ import { SHOW_PR_ON_CASES } from '../../lib/pr';
 import { getGroups, formatDate, type CaseGroup } from '../../lib/sheet';
 import { TITLE_OVERRIDES, caseTitleParts, spoofPhrase, caseLabel, spoofCategory, NOT_PHISHING_METHODS } from '../../lib/slugs';
 import { getRelated } from '../../lib/related';
-import { quoteHead } from '../../lib/quotes';
+import { quoteHead, headLine } from '../../lib/quotes';
+import { FULL_TEXT_CASES, isThinGroup } from '../../lib/thin';
 
 export async function getStaticPaths() {
   const groups = await getGroups();
@@ -57,6 +58,13 @@ const arrive = group.media === '電話' ? 'という' : 'と届く';
 const description = `「${quote}」${arrive}${phrase}詐欺${group.media}の実例${group.total}件(最新:${formatDate(group.latest)})。${method && `「${override.method ?? group.method}」の`}見分け方と、URLを開いてしまったときの対処法を掲載。`;
 // ほかの事例:選び方は src/lib/related.ts
 const related = (await getRelated()).get(group.slug) ?? [];
+// 本文を全文で載せるのは新しい順に FULL_TEXT_CASES 件まで。それより前の文面は、受信日と1行目(メールなら件名)だけの一覧にする
+// (同じ詐欺の文面を何十件も並べると、ページの大半がほかのサイトにもある文になり、解説が埋もれるため。src/lib/thin.ts)
+const fullCases = group.cases.slice(0, FULL_TEXT_CASES);
+const olderCases = group.cases.slice(FULL_TEXT_CASES);
+const olderTotal = olderCases.reduce((s, c) => s + c.count, 0);
+const olderLine = (body: string) => { const h = headLine(body); return [...h].length > 60 ? `${[...h].slice(0, 60).join('')}…` : h; };
+// 事例が1件だけのページは検索結果に出さない(noindex)。2件以上になると自動で検索に戻る
 
 // シートの日付が読めない行があってもビルドを止めない
 const times = group.cases.map((c) => c.date.getTime()).filter((t) => !Number.isNaN(t));
@@ -93,7 +101,7 @@ const jsonLd = [
   },
 ];
 ---
-<Base title={title} description={description} ogType="article" jsonLd={jsonLd} titleSuffix={false} ogImage={ogImage} ogImageAlt={title}>
+<Base title={title} description={description} ogType="article" jsonLd={jsonLd} titleSuffix={false} ogImage={ogImage} ogImageAlt={title} noindex={isThinGroup(group)}>
   <div class="crumb"><a href="/">ホーム</a> › <a href="/cases/">詐欺事例</a> › <a href={spoofAnchor}>{category}</a> › {methodShort}</div>
   <div class="layout">
     <article class="article">
@@ -113,12 +121,20 @@ const jsonLd = [
 
       <h2>実際に届いたメッセージ</h2>
       <div class="sms-box">
-        {group.cases.map((c) => (
+        {fullCases.map((c) => (
           <div class="sms">
             <div class="info">{formatDate(c.date)} 受信{c.count > 1 && `(同じ文面を${c.count}回受信)`}</div>
             <div class="bubble">{c.body}</div>
           </div>
         ))}
+        {olderCases.length > 0 && (
+          <div class="sms-older">
+            <p class="info">それより前に届いた{olderTotal}件は、受信日と1行目(メールは件名)だけを載せ、本文は省いています。</p>
+            <ul>
+              {olderCases.map((c) => <li><span class="info">{formatDate(c.date)}{c.count > 1 && `(${c.count}回)`}</span> {olderLine(c.body)}</li>)}
+            </ul>
+          </div>
+        )}
         <div class="note">※URLは誤ってアクセスしないよう無害化して掲載しています。送信元の番号は偽装や乗っ取りの可能性があるため掲載していません。</div>
       </div>
 

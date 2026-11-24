@@ -4,11 +4,12 @@ import { adsenseClient } from '../lib/adsense';
 // jsonLd: ページごとの構造化データ(schema.org)。配列で複数渡せる
 // titleSuffix: false で <title> の末尾にサイト名を付けない(検索結果で切れやすい長いタイトルの事例ページ用。サイト名は og:site_name と構造化データで伝わる)
 // ogImage / ogImageAlt: ページごとのOGP画像のパスと代替テキスト(事例ページ用)。省くとサイト共通の /og.png
-interface Props { title: string; description?: string; ogType?: 'website' | 'article'; jsonLd?: object[]; titleSuffix?: boolean; ogImage?: string; ogImageAlt?: string }
-const { title, description = '実際に届いた詐欺SMS・フィッシングメールの事例と対策をまとめています。', ogType = 'website', jsonLd = [], titleSuffix = true, ogImage = '/og.png', ogImageAlt } = Astro.props;
+// noindex:検索結果に出さないページ(事例が1件だけの事例ページなど)。canonical の代わりに robots の noindex を出す
+interface Props { title: string; description?: string; ogType?: 'website' | 'article'; jsonLd?: object[]; titleSuffix?: boolean; ogImage?: string; ogImageAlt?: string; noindex?: boolean }
+const { title, description = '実際に届いた詐欺SMS・フィッシングメールの事例と対策をまとめています。', ogType = 'website', jsonLd = [], titleSuffix = true, ogImage = '/og.png', ogImageAlt, noindex = false } = Astro.props;
 const siteName = '詐欺SMS実録ノート';
 // 404 はどのURLでも表示されるので canonical を付けない
-const canonical = Astro.url.pathname.startsWith('/404') ? null : new URL(Astro.url.pathname, Astro.site);
+const canonical = Astro.url.pathname.startsWith('/404') || noindex ? null : new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
 <html lang="ja">
