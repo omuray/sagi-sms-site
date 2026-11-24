@@ -7,10 +7,19 @@ export const FULL_TEXT_CASES = 5;
 
 // 事例が1件だけのページは検索結果に出さない(noindex にして sitemap からも外す)
 // 2件目が届けば、次のビルドで自動的に検索に戻る
-// ただし、検索から実際に訪問があるページは例外として検索に残す(KEEP_INDEXED)
-// rakuten-card-verify:直近28日で5クリック・138回表示(2026-11-19時点)
-// u-next-payment:2026-11-13〜19の7日間で4クリック・142回表示
-export const KEEP_INDEXED = new Set(['rakuten-card-verify', 'u-next-payment']);
+// ただし、検索から実際に訪問があるページ(直近28日に1クリック以上)は例外として検索に残す(KEEP_INDEXED)
+// 数字は 2026-10-26〜11-22 の28日間(クリック/表示)
+export const KEEP_INDEXED = new Set([
+  'takarakuji-prize', // 8 / 561
+  'u-next-payment', // 6 / 245
+  'eplus-payment', // 6 / 84
+  'rakuten-card-verify', // 5 / 148
+  'amex-upgrade', // 2 / 31
+  'eplus-prize', // 1 / 178
+  'rakuten-card-upgrade', // 1 / 104
+  'nhk-payment', // 1 / 89
+  'jre-point-points', // 1 / 59
+]);
 
 export function isThinGroup(group: CaseGroup): boolean {
   return group.total <= 1 && !KEEP_INDEXED.has(group.slug);
