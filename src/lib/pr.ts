@@ -1,9 +1,9 @@
 // PR枠:A8.net の広告リンク(セキュリティソフト)。並べた順に表示する(事例ページは先頭の1製品だけ)
 // url を空にした製品は出さない。すべて空にすると、PR枠を出しているページすべてで枠ごと出さない
 // pixel は A8.net の表示回数の計測用画像。リンクコードの <img> の src をそのまま入れる
-// 事例ページにPR枠を出すか。AdSense の審査で「有用性の低いコンテンツ」とされたため、審査のあいだは false にする(2026-11)
-// 合格したら true に戻す。セキュリティアプリの選び方のページ(/guide/security-app/)には、この設定に関係なく出す
-export const SHOW_PR_ON_CASES = false;
+// 事例ページにPR枠を出すか。AdSense の審査のあいだは false にしていた(2026-11-15〜24)が、2026-11-24 に運営者の判断で再開した
+// AdSense の再審査の前に外すかどうかは、そのときに決める。セキュリティアプリの選び方のページ(/guide/security-app/)には、この設定に関係なく出す
+export const SHOW_PR_ON_CASES = true;
 
 export interface PrProduct {
   name: string;
