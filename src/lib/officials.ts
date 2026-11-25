@@ -45,6 +45,8 @@ export const OFFICIAL_LINKS: Record<string, string> = {
   '東京ガス': 'https://home.tokyo-gas.co.jp/gas_power/contact/phishing.html',
   '東京電力': 'https://www.tepco.co.jp/ep/archive/20240315.html',
   '国税庁': 'https://www.nta.go.jp/information/attention/attention.htm',
+  // 日本年金機構は「日本年金機構を装った不審なメール・SMSにご注意ください。」(2026年11月に確認。偽メールの例が載っている)
+  '日本年金機構': 'https://www.nenkin.go.jp/oshirase/gochui/20200609.html',
   // 配送
   // ヤマト運輸は「ヤマト運輸の名前を装った迷惑メールが多発しています」(2025年8月26日更新、2026年11月に確認)
   'ヤマト運輸': 'https://www.yamato-hd.co.jp/important/info_181212.html',

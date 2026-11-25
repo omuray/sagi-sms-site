@@ -49,6 +49,7 @@ export const SPOOF_SLUGS: Record<string, string> = {
   '東京電力': 'tepco',
   'NHK': 'nhk',
   '国税庁': 'nta',
+  '日本年金機構': 'nenkin',
   '自治体(国民健康保険)': 'health-insurance',
   // 配送
   '佐川急便': 'sagawa',
