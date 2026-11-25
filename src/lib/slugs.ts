@@ -26,6 +26,7 @@ export const SPOOF_SLUGS: Record<string, string> = {
   'アメリカン・エキスプレス': 'amex',
   'UCSカード': 'ucs-card',
   'タカシマヤカード': 'takashimaya-card',
+  'エムアイカード': 'mi-card',
   '三井住友カード': 'smbc-card',
   // 後払い・プリペイド
   'Paidy': 'paidy',
@@ -229,6 +230,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'unknown-card-credit-auth': { method: '決済カードの再登録・与信承認エラー' },
   // 件名は「ご利用限度額(利用可能枠)変更のお知らせ」「ご利用可能枠の改定および本人認証のお願い」
   'takashimaya-card-upgrade': { method: 'ご利用可能枠の改定・本人認証' },
+  // 件名は「ショッピングご利用枠の見直し(減額)に関する重要なお知らせ」
+  'mi-card-upgrade': { method: 'ショッピング利用枠の見直し(減額)' },
 };
 
 // 「〇〇を装った」の言い方。事例ページの導入文・説明文と、一覧やリンクの呼び名で使う

@@ -25,6 +25,8 @@ export const OFFICIAL_LINKS: Record<string, string> = {
   // UCSカードは「UCSをかたる不審なメールにご注意ください」(2026年11月に確認)
   'UCSカード': 'https://www.ucscard.co.jp/info/',
   'タカシマヤカード': 'https://www.takashimaya-fp.co.jp/card/attention/',
+  // エムアイカードは「エムアイカードを装った不審なメール(フィッシングメール)にご注意ください」(2026年11月に確認)
+  'エムアイカード': 'https://www2.micard.co.jp/notice/201030notice.html',
   '三井住友カード': 'https://www.smbc-card.com/mem/service/sec/phishing01.jsp',
   // 銀行・証券・保険
   '三井住友銀行': 'https://www.smbc.co.jp/security/phishing/',
