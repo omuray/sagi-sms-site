@@ -19,6 +19,7 @@ export const KEEP_INDEXED = new Set([
   'rakuten-card-upgrade', // 1 / 104
   'nhk-payment', // 1 / 89
   'jre-point-points', // 1 / 59
+  'v-point-points', // 2026-11-25 追加:11/17〜23の7日間で3クリック・102回表示。送信元アドレス「ptmag@mc.tsite.jp」で検索されている
 ]);
 
 export function isThinGroup(group: CaseGroup): boolean {
