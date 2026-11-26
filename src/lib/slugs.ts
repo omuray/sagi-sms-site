@@ -9,6 +9,7 @@ export const SPOOF_SLUGS: Record<string, string> = {
   'WhatsApp': 'whatsapp',
   'Mercari': 'mercari',
   'ヨドバシカメラ': 'yodobashi',
+  'ファミリーマート': 'familymart',
   // 動画配信・チケット
   'Netflix': 'netflix',
   'U-NEXT': 'u-next',
@@ -233,6 +234,8 @@ export const TITLE_OVERRIDES: Record<string, { spoof?: string; method?: string }
   'takashimaya-card-upgrade': { method: 'ご利用可能枠の改定・本人認証' },
   // 件名は「ショッピングご利用枠の見直し(減額)に関する重要なお知らせ」
   'mi-card-upgrade': { method: 'ショッピング利用枠の見直し(減額)' },
+  // 件名は「【FamiPay】ポイント有効期限のお知らせ」
+  'familymart-points': { method: 'FamiPayのポイント有効期限・失効' },
 };
 
 // 「〇〇を装った」の言い方。事例ページの導入文・説明文と、一覧やリンクの呼び名で使う

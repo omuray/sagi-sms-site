@@ -7,6 +7,8 @@ export const OFFICIAL_LINKS: Record<string, string> = {
   'Apple': 'https://support.apple.com/ja-jp/102568',
   'Nintendo': 'https://support.nintendo.com/jp/information/2024/1029.html',
   '楽天': 'https://corp.rakuten.co.jp/security/anti-fraud/',
+  // ファミリーマートは「ファミリーマートおよび関係会社を装う迷惑メール・SNS・サイト等について」(2026年11月に確認)
+  'ファミリーマート': 'https://www.family.co.jp/info/attention_1.html',
   // Netflix はヘルプセンターの「フィッシングまたはNetflixを名乗る疑わしいメールやテキストメッセージ」(2026年11月に確認)
   'Netflix': 'https://help.netflix.com/ja/node/65674',
   'WhatsApp': 'https://faq.whatsapp.com/2286952358121083/?locale=ja_JP',
